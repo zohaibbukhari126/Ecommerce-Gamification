@@ -13,10 +13,6 @@ public class Fraction {
         setDenominator(denominator);
     }
 
-    public int getNumerator() {
-        return numerator;
-    }
-
     public void setNumerator(int numerator) {
         this.numerator = numerator;
     }
