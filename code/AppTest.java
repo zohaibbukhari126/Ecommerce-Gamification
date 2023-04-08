@@ -15,7 +15,6 @@ public class AppTest {
             switch (choice) {
                 case 1:
                    displayCustomerMenu();
-                   
                     break;
                 case 2:
                    displaySellerMenu();
