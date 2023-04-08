@@ -4,7 +4,6 @@ public class App {
 
 
 
-
     
     public void setNumerator(int numerator) {
         this.numerator = numerator;    }
