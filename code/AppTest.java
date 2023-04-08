@@ -5,7 +5,8 @@ public class AppTest {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         ArrayList<Person> personArrayList = new ArrayList<Person>();
-        
+        ArrayList<Product> productArrayList = new ArrayList<Product>();
+
         System.out.println("Enter First Name, Last Name, Email & Phone Number");
         personArrayList.add(new Person(sc.next(), sc.next(), sc.next(), sc.next()));
        
@@ -14,10 +15,29 @@ public class AppTest {
             int choice = sc.nextInt();
             switch (choice) {
                 case 1:
-                   displayCustomerMenu();
+                displayCustomerMenu();
                     break;
                 case 2:
-                   displaySellerMenu();
+                System.out.println("Enter your first, last name, email, phone number & seller ID");
+                Seller sellerObj = new Seller(sc.next(),sc.next(),sc.next(),sc.next(),sc.next());
+                   
+                   
+                  loop2: while(true){
+                    displaySellerMenu();
+                    int choice2 = sc.nextInt();
+                   switch(choice2){
+                   case 1: 
+                    System.out.println("Enter Product ID, name, description, price, category & quantity");
+                    productArrayList.add(new Product(sc.next(),sc.next(),
+                    sc.nextLine(),sc.nextDouble(),sc.next(),sc.nextInt(),sellerObj));
+                   break;
+                   case 2:
+                   System.out.println("small case 2");
+                   break loop2;
+                   default:
+                   System.out.println("Invalid Choice. Please try again.");
+                   }
+                   }
                     break;
                 case 3:
                 System.exit(0);
@@ -27,9 +47,6 @@ public class AppTest {
             }
         }
     }
-
-
-
 
 
 
@@ -55,13 +72,13 @@ public class AppTest {
 
     public static void displaySellerMenu() {
      System.out.println("\nSELLER MENU" +
-        "\n 1. View Products" +
+        "\n 1. Add Product" +
         "\n 2. Add Product" +
         "\n 3. Remove Product" +
         "\n 4. View Sales" +
         "\n 5. Logout" + 
         "\nEnter your choice: ");
     }
-}
 
+}    
 
