@@ -2,9 +2,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class App{
-
-    }
+class App{ }
 
 
 class Store {
@@ -534,7 +532,8 @@ class Transaction {
     private Order order;
     private Payment payment;
     private Date date;
-    private String status;public Transaction(String transactionId, Order order, Payment payment, Date date, String status) {
+    private String status;
+    public Transaction(String transactionId, Order order, Payment payment, Date date, String status) {
         this.transactionId = transactionId;
         this.order = order;
         this.payment = payment;
