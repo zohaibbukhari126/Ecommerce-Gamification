@@ -24,8 +24,8 @@ class Store {
         products.remove(product);
     }
 
-    public List<Product> searchProduct(String keyword) {
-        List<Product> searchResults = new ArrayList<>();
+    public ArrayList<Product> searchProduct(String keyword) {
+        ArrayList<Product> searchResults = new ArrayList<>();
         for (Product product : products) {
             if (product.getName().toLowerCase().contains(keyword.toLowerCase()) ||
                     product.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
@@ -112,7 +112,8 @@ class Customer extends Person {
     private List<Activity> activities;
     private Points points;
 
-    public Customer(String firstName, String lastName, String email, String phoneNumber, String customerId) {
+    public Customer(String firstName, String lastName,
+     String email, String phoneNumber, String customerId) {
         super(firstName, lastName, email, phoneNumber);
         this.customerId = customerId;
         this.orders = new ArrayList<>();
@@ -178,7 +179,8 @@ class Customer extends Person {
 class Seller extends Person {
     private String sellerId;
     private List<Product> products;
-    public Seller(String firstName, String lastName, String email, String phoneNumber, String sellerId) {
+    public Seller(String firstName, String lastName,
+     String email, String phoneNumber, String sellerId) {
         super(firstName, lastName, email, phoneNumber);
         this.sellerId = sellerId;
         this.products = new ArrayList<>();
@@ -229,7 +231,8 @@ class Product {
     private double price;
     private String category;
     private int quantity;
-    private Seller seller;public Product(String productId, String name, String description, double price, String category, int quantity, Seller seller) {
+    private Seller seller;public Product(String productId, String name,
+     String description, double price, String category, int quantity, Seller seller) {
         this.productId = productId;
         this.name = name;
         this.description = description;
@@ -303,11 +306,11 @@ class Product {
 class Order {
     private String orderId;
     private Customer customer;
-    private List<Product> products;
+    private ArrayList<Product> products;
     private String status;
     private Transaction transaction;
 
-    public Order(String orderId, Customer customer, List<Product> products, String status, Transaction transaction) {
+    public Order(String orderId, Customer customer, ArrayList<Product> products, String status, Transaction transaction) {
         this.orderId = orderId;
         this.customer = customer;
         this.products = products;
@@ -339,7 +342,7 @@ class Order {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(ArrayList<Product> products) {
         this.products = products;
     }
 

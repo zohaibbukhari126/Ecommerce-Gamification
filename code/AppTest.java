@@ -14,6 +14,9 @@ public class AppTest {
             displayMainMenu();
             int choice = sc.nextInt();
             switch (choice) {
+                case 0:
+                System.exit(0);
+                break;
                 case 1:
                 displayCustomerMenu();
                     break;
@@ -26,21 +29,22 @@ public class AppTest {
                     displaySellerMenu();
                     int choice2 = sc.nextInt();
                    switch(choice2){
+                    case 0:
+                    break loop2;
                    case 1: 
                     System.out.println("Enter Product ID, name, description, price, category & quantity");
                     productArrayList.add(new Product(sc.next(),sc.next(),
                     sc.nextLine(),sc.nextDouble(),sc.next(),sc.nextInt(),sellerObj));
                    break;
                    case 2:
-                   System.out.println("small case 2");
-                   break loop2;
+                   System.out.println("Enter Product Name");
+                   for(int a = 0; a<productArrayList.size();a++)
+            
+                   break;
                    default:
                    System.out.println("Invalid Choice. Please try again.");
                    }
                    }
-                    break;
-                case 3:
-                System.exit(0);
                     break;
                   default:
                     System.out.println("Invalid choice. Please try again.");
@@ -54,9 +58,9 @@ public class AppTest {
 
     public static void displayMainMenu() {
         System.out.println("\nMAIN MENU" +
+        "\n 0. Exit" +
         "\n 1. Customer Login" +
         "\n 2. Seller Login" +
-        "\n 3. Exit" +
         "\nEnter your choice: ");
     }
 
@@ -72,7 +76,7 @@ public class AppTest {
 
     public static void displaySellerMenu() {
      System.out.println("\nSELLER MENU" +
-        "\n 1. Add Product" +
+        "\n 0. Exit" +
         "\n 2. Add Product" +
         "\n 3. Remove Product" +
         "\n 4. View Sales" +
