@@ -21,8 +21,10 @@ public class AppTest {
                 displayCustomerMenu();
                     break;
                 case 2:
-                System.out.println("Enter your first, last name, email, phone number & seller ID");
-                Seller sellerObj = new Seller(sc.next(),sc.next(),sc.next(),sc.next(),sc.next());
+                System.out.println("Enter your seller ID");
+                Seller sellerObj = new Seller(personArrayList.get(Person.totalPerson).getFirstName(),
+                personArrayList.get(Person.totalPerson).getLastName(),personArrayList.get(Person.totalPerson).getEmail(),
+                personArrayList.get(Person.totalPerson).getPhoneNumber(),sc.next());
                    
                    
                   loop2: while(true){
@@ -34,24 +36,26 @@ public class AppTest {
                    case 1: 
                     System.out.println("Enter Product ID, name, description, price, category & quantity");
                     productArrayList.add(new Product(sc.next(),sc.next(),
-                    sc.nextLine(),sc.nextDouble(),sc.next(),sc.nextInt(),sellerObj));
+                    sc.next(),sc.nextDouble(),sc.next(),sc.nextInt(),sellerObj));
                    break;
                    case 2:
                    System.out.println("Enter Product Name");
                    for(int a = 0; a<productArrayList.size();a++)
             
                    break;
-                   default:
-                   System.out.println("Invalid Choice. Please try again.");
-                   }
-                   }
+
+                   case 4:
+                   for(Product p: productArrayList)
+                        p.DisplayProduct();
+                   
+                
                     break;
                   default:
                     System.out.println("Invalid choice. Please try again.");
-            }
+            } 
+        }  }
         }
     }
-
 
 
 
@@ -77,10 +81,10 @@ public class AppTest {
     public static void displaySellerMenu() {
      System.out.println("\nSELLER MENU" +
         "\n 0. Exit" +
-        "\n 2. Add Product" +
-        "\n 3. Remove Product" +
-        "\n 4. View Sales" +
-        "\n 5. Logout" + 
+        "\n 1. Add Product" +
+        "\n 2. Remove Product" +
+        "\n 3. View Sales" +
+        "\n 4. View Products" +
         "\nEnter your choice: ");
     }
 

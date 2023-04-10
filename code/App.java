@@ -2,8 +2,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-class App{ }
-
+class App{}
 
 class Store {
     private String name;
@@ -23,6 +22,7 @@ class Store {
     public void removeProduct(Product product) {
         products.remove(product);
     }
+
 
     public ArrayList<Product> searchProduct(String keyword) {
         ArrayList<Product> searchResults = new ArrayList<>();
@@ -65,15 +65,17 @@ class Person {
     private String lastName;
     private String email;
     private String phoneNumber;
-
+    public static int totalPerson = -1;
     public Person(String firstName, String lastName, String email, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        totalPerson++;
     }
 
     public String getFirstName() {
+
         return firstName;
     }
 
@@ -231,7 +233,8 @@ class Product {
     private double price;
     private String category;
     private int quantity;
-    private Seller seller;public Product(String productId, String name,
+    private Seller seller;
+    public Product(String productId, String name,
      String description, double price, String category, int quantity, Seller seller) {
         this.productId = productId;
         this.name = name;
@@ -240,6 +243,17 @@ class Product {
         this.category = category;
         this.quantity = quantity;
         this.seller = seller;
+    }
+
+    void DisplayProduct()
+    {
+        System.out.println("Product ID :" + " " + getProductId());
+        System.out.println("Product Name :" + " " + getName());
+        System.out.println("Product Description :" + " " + getDescription());
+        System.out.println("Product Price :" + " " + getPrice());
+        System.out.println("Product Category :" + " " + getCategory());
+        System.out.println("Product Quantity :" + " " + getQuantity());
+        System.out.println();
     }
 
     public void updateQuantity(int quantity) {
