@@ -1,17 +1,20 @@
 import java.util.*;
-import java.lang.*;  
+import java.lang.*;
 public class AppTest {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        ArrayList<Person> personArrayList = new ArrayList<Person>();//
+        ArrayList<Person> personArrayList = new ArrayList<Person>();
         ArrayList<Product> productArrayList = new ArrayList<Product>();
 
-int choice1 =  0;
+int choice1 = -1;
 
-        while(choice1 != 3){
+        while(choice1 != 0){
             App.mainMenu();
             choice1 = sc.nextInt();
-            switch(choice1) {
+            switch(choice1){
+                case 0:
+                    System.out.println("Exiting main menu...");
+                    break;
                 case 1:
                     System.out.println("Entering Seller Details...\nEnter first name");
                     String firstName = sc.next();
@@ -27,11 +30,14 @@ int choice1 =  0;
                     personArrayList.add(seller);
 
 
-                    int choice2 = 0;
-                   while(choice2 != 3) {
+                    int choice2 = -1;
+                   while(choice2 != 0) {
                        App.sellerMenu();
                        choice2 = sc.nextInt();
                        switch (choice2) {
+                           case 0:
+                               System.out.println("Exiting Seller Menu...");
+                               break;
                            case 1:
                                System.out.println("Enter Product ID");
                                String id = sc.next();
@@ -57,8 +63,21 @@ int choice1 =  0;
                                }
                                break;
                            case 3:
-                               System.out.println("Exiting Seller Menu...");
+                               System.out.println("Enter Product ID of product you want to remove");
+                               String tempId = sc.next();
+                               boolean found1 = false;
+                               for(Product x: productArrayList){
+                                   if(x.getProductId().equals(tempId)) {
+                                       productArrayList.remove(x);
+                                       System.out.println("Item removed successfully");
+                                       found1 = true;
+                                       break;
+                                   }
+                               }
+                            if(found1 == false)
+                                System.out.println("Product with that id not found, sorry!");
                                break;
+
                            default:
                                System.out.println("Invalid choice, enter valid choice!");
                                break;
@@ -68,9 +87,7 @@ int choice1 =  0;
                 case 2:
                     //Customer
                     break;
-                case 3:
-                    System.out.println("Exit Successful!");
-                    break;
+
                 default:
                     System.out.println("Choice invalid, enter valid choice!");
 
