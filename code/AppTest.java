@@ -11,7 +11,7 @@ int choice1 =  0;
         while(choice1 != 3){
             App.mainMenu();
             choice1 = sc.nextInt();
-            switch(choice1){
+            switch(choice1) {
                 case 1:
                     System.out.println("Entering Seller Details...\nEnter first name");
                     String firstName = sc.next();
