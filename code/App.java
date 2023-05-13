@@ -1,77 +1,22 @@
 import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 
     class App{
         public static void mainMenu(){
+            System.out.println("\n0.Exit");
             System.out.println("1.Login as Seller");
             System.out.println("2.Login as Customer");
-            System.out.println("3.Exit");
+
         }
         public static void sellerMenu() {
+            System.out.println("\n0.Exit");
             System.out.println("1.Add Product");
             System.out.println("2.View Product");
-            System.out.println("3.Exit");
+            System.out.println("3.Remove Product");
 
         }
     }
-
-class Store {
-    private String name;
-    private String address;
-    private List<Product> products;
-
-    public Store(String name, String address) {
-        this.name = name;
-        this.address = address;
-        this.products = new ArrayList<>();
-    }
-
-    public void addProduct(Product product) {
-        products.add(product);
-    }
-
-    public void removeProduct(Product product) {
-        products.remove(product);
-    }
-
-
-    public ArrayList<Product> searchProduct(String keyword) {
-        ArrayList<Product> searchResults = new ArrayList<>();
-        for (Product product : products) {
-            if (product.getName().toLowerCase().contains(keyword.toLowerCase()) ||
-                    product.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
-                searchResults.add(product);
-            }
-        }
-        return searchResults;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
-}
-
 class Person {
     private String firstName;
     private String lastName;
@@ -218,31 +163,21 @@ class Customer extends Person {
 class Seller extends Person {
     private String sellerId;
     private List<Product> products;
+
+    @Override
+    public String toString() {
+        return "Seller{" +
+                "sellerId='" + sellerId + '\'' +
+                '}';
+    }
+
     public Seller(String firstName, String lastName,
                   String email, String phoneNumber, String sellerId) {
         super(firstName, lastName, email, phoneNumber);
         this.sellerId = sellerId;
         this.products = new ArrayList<>();
-    }
 
-    public void addProduct(Product product) {
-        products.add(product);
-    }
 
-    public void removeProduct(Product product) {
-        products.remove(product);
-    }
-
-    public void updateProduct(Product product) {
-        for (Product p : products) {
-            if (p.getProductId().equals(product.getProductId())) {
-                p.setName(product.getName());
-                p.setDescription(product.getDescription());
-                p.setPrice(product.getPrice());
-                p.setCategory(product.getCategory());
-                p.setQuantity(product.getQuantity());
-            }
-        }
     }
 
 
