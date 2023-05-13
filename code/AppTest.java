@@ -6,86 +6,77 @@ public class AppTest {
         ArrayList<Person> personArrayList = new ArrayList<Person>();
         ArrayList<Product> productArrayList = new ArrayList<Product>();
 
-        System.out.println("Enter First Name, Last Name, Email & Phone Number");
-        personArrayList.add(new Person(sc.next(), sc.next(), sc.next(), sc.next()));
-       
-        while (true) {
-            displayMainMenu();
-            int choice = sc.nextInt();
-            switch (choice) {
-                case 0:
-                System.exit(0);
-                break;
+int choice1 = 0;
+
+        while(choice1 != 3){
+            App.mainMenu();
+            choice1 = sc.nextInt();
+            switch(choice1){
                 case 1:
-                displayCustomerMenu();
+                    System.out.println("Entering Seller Details...\nEnter first name");
+                    String firstName = sc.next();
+                    System.out.println("Enter last name");
+                    String lastName = sc.next();
+                    System.out.println("Enter email");
+                    String email = sc.next();
+                    System.out.println("Enter phone number");
+                    String phoneNumber = sc.next();
+                    System.out.println("Enter seller id");
+                    String sellerId = sc.next();
+                    Seller seller = new Seller(firstName,lastName,email,phoneNumber,sellerId);
+                    personArrayList.add(seller);
+
+
+                    int choice2 = 0;
+                   while(choice2 != 3) {
+                       App.sellerMenu();
+                       choice2 = sc.nextInt();
+                       switch (choice2) {
+                           case 1:
+                               System.out.println("Enter Product ID");
+                               String id = sc.next();
+                               System.out.println("Enter Product name");
+                               String name = sc.next();
+                               sc.nextLine();
+                               System.out.println("Enter Product Description");
+                               String description = sc.nextLine();
+                               sc.nextLine();
+                               System.out.println("Enter Price");
+                               double price = sc.nextDouble();
+                               System.out.println("Enter Category");
+                               String category = sc.next();
+                               System.out.println("Enter Quantity");
+                               int quantity = sc.nextInt();
+                               Product product = new Product(id, name, description, price,
+                                       category, quantity, seller);
+                               productArrayList.add(product);
+                               break;
+                           case 2:
+                               for (Product x : productArrayList) {
+                                   System.out.println(x);
+                               }
+                               break;
+                           case 3:
+                               System.out.println("Exiting Seller Menu...");
+                               break;
+                           default:
+                               System.out.println("Invalid choice, enter valid choice!");
+                               break;
+                       }
+                   }
                     break;
                 case 2:
-                System.out.println("Enter your seller ID");
-                Seller sellerObj = new Seller(personArrayList.get(Person.totalPerson).getFirstName(),
-                personArrayList.get(Person.totalPerson).getLastName(),personArrayList.get(Person.totalPerson).getEmail(),
-                personArrayList.get(Person.totalPerson).getPhoneNumber(),sc.next());
-                   
-                   
-                  loop2: while(true){
-                    displaySellerMenu();
-                    int choice2 = sc.nextInt();
-                   switch(choice2){
-                    case 0:
-                    break loop2;
-                   case 1: 
-                    System.out.println("Enter Product ID, name, description, price, category & quantity");
-                    productArrayList.add(new Product(sc.next(),sc.next(),
-                    sc.next(),sc.nextDouble(),sc.next(),sc.nextInt(),sellerObj));
-                   break;
-                   case 2:
-                   System.out.println("Enter Product Name");
-                   for(int a = 0; a<productArrayList.size();a++)
-            
-                   break;
-
-                   case 4:
-                   for(Product p: productArrayList)
-                        p.DisplayProduct();
-                   
-                
+                    //Customer
                     break;
-                  default:
-                    System.out.println("Invalid choice. Please try again.");
-            } 
-        }  }
+                case 3:
+                    System.out.println("Exit Successful!");
+                    break;
+                default:
+                    System.out.println("Choice invalid, enter valid choice!");
+
+            }
         }
+
+
     }
-
-
-
-
-    public static void displayMainMenu() {
-        System.out.println("\nMAIN MENU" +
-        "\n 0. Exit" +
-        "\n 1. Customer Login" +
-        "\n 2. Seller Login" +
-        "\nEnter your choice: ");
-    }
-
-     public static void displayCustomerMenu() {
-       System.out.println("\nCUSTOMER MENU" +
-        "\n 1. View Products" + 
-        "\n 2. View Transactions" +
-        "\n 3. Buy Product" +
-        "\n 4. View Balance" +
-        "\n 5. Logout" +
-        "\nEnter your choice: ");
-    }
-
-    public static void displaySellerMenu() {
-     System.out.println("\nSELLER MENU" +
-        "\n 0. Exit" +
-        "\n 1. Add Product" +
-        "\n 2. Remove Product" +
-        "\n 3. View Sales" +
-        "\n 4. View Products" +
-        "\nEnter your choice: ");
-    }
-
-}    
-
+}
