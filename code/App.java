@@ -12,9 +12,14 @@ import java.util.List;
         public static void sellerMenu() {
             System.out.println("\n0.Exit");
             System.out.println("1.Add Product");
-            System.out.println("2.View Product");
+            System.out.println("2.View All Products");
             System.out.println("3.Remove Product");
 
+        }
+        public static void customerMenu(){
+            System.out.println("\n0.Exit");
+            System.out.println("1.View All Products");
+            System.out.println("2.Buy Product");
         }
     }
 class Person {
@@ -22,7 +27,6 @@ class Person {
     private String lastName;
     private String email;
     private String phoneNumber;
-    private double balance;
     public static int totalPerson = -1;
     public Person(String firstName, String lastName, String email, String phoneNumber) {
         this.firstName = firstName;
