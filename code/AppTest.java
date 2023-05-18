@@ -85,7 +85,16 @@ int choice1 = -1;
                    }
                     break;
                 case 2:
-                    //Customer
+                   int choice3 = -1;
+                   while (choice3 != 0){
+                       App.customerMenu();
+                       choice3 = sc.nextInt();
+                       switch(choice3){
+                           case 0:
+                               System.out.println("Exiting customer menu...");
+                               break;
+                       }
+                }
                     break;
 
                 default:
@@ -93,7 +102,5 @@ int choice1 = -1;
 
             }
         }
-
-
     }
 }
