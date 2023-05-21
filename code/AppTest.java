@@ -93,14 +93,32 @@ int choice1 = -1;
                            case 0:
                                System.out.println("Exiting customer menu...");
                                break;
+                           case 1:
+                               for(Product x: productArrayList)
+                                   System.out.println(x);
+                               break;
+                           case 2:
+                               System.out.println("Enter Product ID you want to buy");
+                               String productID = sc.next();
+                               for(Product x: productArrayList){
+                                   if(x.getProductId().equals(productID)){
+                                       System.out.println(x);
+                                       System.out.println(x.getPrice()+" deducted from your account");
+                                       x.setQuantity(x.getQuantity()-1);
+                                       if(x.getQuantity()==0)
+                                           productArrayList.remove(x);
+                                   }
+                               }
+
                        }
                 }
-                    break;
 
                 default:
                     System.out.println("Choice invalid, enter valid choice!");
 
             }
         }
+
+
     }
 }
