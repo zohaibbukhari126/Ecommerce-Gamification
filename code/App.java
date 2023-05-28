@@ -1,128 +1,306 @@
-    import java.util.*;
-    import java.lang.*;
-    public class AppTest {
-        public static void main(String[] args) {
-            Scanner sc = new Scanner(System.in);
-            ArrayList<Person> personArrayList = new ArrayList<Person>();
-            ArrayList<Product> productArrayList = new ArrayList<Product>();
+import java.util.ArrayList;
 
-            int choice1 = -1;
+import java.util.List;
 
-            while (choice1 != 0) {
-                App.mainMenu();
-                choice1 = sc.nextInt();
-                switch (choice1) {
-                    case 0:
-                        System.out.println("Exiting main menu...");
-                        break;
-                    case 1:
-                        System.out.println("Entering Seller Details...\nEnter first name");
-                        String firstName = sc.next();
-                        System.out.println("Enter last name");
-                        String lastName = sc.next();
-                        System.out.println("Enter email");
-                        String email = sc.next();
-                        System.out.println("Enter phone number");
-                        String phoneNumber = sc.next();
-                        System.out.println("Enter seller id");
-                        String sellerId = sc.next();
-                        Seller seller = new Seller(firstName, lastName, email, phoneNumber, sellerId);
-                        personArrayList.add(seller);
+class App{
+    public static void mainMenu(){
+        System.out.println("\n0.Exit");
+        System.out.println("1.Login as Seller");
+        System.out.println("2.Login as Customer");
 
+    }
+    public static void sellerMenu() {
+        System.out.println("\n0.Exit");
+        System.out.println("1.Add Product");
+        System.out.println("2.View All Products");
+        System.out.println("3.Remove Product");
 
-                        int choice2 = -1;
-                        while (choice2 != 0) {
-                            App.sellerMenu();
-                            choice2 = sc.nextInt();
-                            switch (choice2) {
-                                case 0:
-                                    System.out.println("Exiting Seller Menu...");
-                                    break;
-                                case 1:
-                                    System.out.println("Enter Product ID");
-                                    String id = sc.next();
-                                    System.out.println("Enter Product name");
-                                    String name = sc.next();
-                                    sc.nextLine();
-                                    System.out.println("Enter Product Description");
-                                    String description = sc.nextLine();
-                                    sc.nextLine();
-                                    System.out.println("Enter Price");
-                                    double price = sc.nextDouble();
-                                    System.out.println("Enter Category");
-                                    String category = sc.next();
-                                    System.out.println("Enter Quantity");
-                                    int quantity = sc.nextInt();
-                                    Product product = new Product(id, name, description, price,
-                                            category, quantity, seller);
-                                    productArrayList.add(product);
-                                    break;
-                                case 2:
-                                    for (Product x : productArrayList) {
-                                        System.out.println(x);
-                                    }
-                                    break;
-                                case 3:
-                                    System.out.println("Enter Product ID of product you want to remove");
-                                    String tempId = sc.next();
-                                    boolean found1 = false;
-                                    for (Product x : productArrayList) {
-                                        if (x.getProductId().equals(tempId)) {
-                                            productArrayList.remove(x);
-                                            System.out.println("Item removed successfully");
-                                            found1 = true;
-                                            break;
-                                        }
-                                    }
-                                    if (found1 == false)
-                                        System.out.println("Product with that id not found, sorry!");
-                                    break;
+    }
+    public static void customerMenu(){
+        System.out.println("\n0.Exit");
+        System.out.println("1.View All Products");
+        System.out.println("2.Buy Product");
+    }
+}
+class Person {
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phoneNumber;
+    public static int totalPerson = -1;
+    public Person(String firstName, String lastName, String email, String phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        totalPerson++;
+    }
 
-                                default:
-                                    System.out.println("Invalid choice, enter valid choice!");
-                                    break;
-                            }
-                        }
-                        break;
-                    case 2:
-                        int choice3 = -1;
-                        while (choice3 != 0) {
-                            App.customerMenu();
-                            choice3 = sc.nextInt();
-                            switch (choice3) {
-                                case 0:
-                                    System.out.println("Exiting customer menu...");
-                                    break;
-                                case 1:
-                                    for (Product x : productArrayList)
-                                        System.out.println(x);
-                                    break;
-                                case 2: {
-                                    System.out.println("Enter Product ID you want to buy");
-                                    String productID = sc.next();
-                                    for (Product x : productArrayList) {
-                                        if (x.getProductId().equals(productID)) {
-                                            if (x.getQuantity() == 0) {
-                                                System.out.println("out of stock");
-                                            } else {
-                                                System.out.println(x);
-                                                System.out.println(x.getPrice() + " deducted from your account");
-                                                x.setQuantity(x.getQuantity() - 1);
-                                            }
-                                        }
-                                    }
-                                    break;
-                                }
-                                default:
-                                    System.out.println("Choice invalid, enter valid choice!");
-                            }
+    public String getFirstName() {
+
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+}
 
 
+class Order {
+    private String orderId;
+    private Customer customer;
+    private ArrayList<Product> products;
+    private String status;
 
-                        }
-                }
+    public Order(String orderId, Customer customer, ArrayList<Product> products, String status) {
+        this.orderId = orderId;
+        this.customer = customer;
+        this.products = products;
+        this.status = status;
+    }
 
+    public void updateStatus(String status) {
+        this.status = status;
+    }
 
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+}
+class Customer extends Person {
+    private String customerId;
+    private List<Order> orders;
+
+    public Customer(String firstName, String lastName,
+                    String email, String phoneNumber, String customerId) {
+        super(firstName, lastName, email, phoneNumber);
+        this.customerId = customerId;
+        this.orders = new ArrayList<>();
+    }
+
+    public void placeOrder(Order order) {
+        orders.add(order);
+    }
+
+    public Order viewOrder(String orderId) {
+        for (Order order : orders) {
+            if (order.getOrderId().equals(orderId)) {
+                return order;
             }
         }
+        return null;
     }
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+
+
+}
+
+class Seller extends Person {
+    private String sellerId;
+    private List<Product> products;
+
+    @Override
+    public String toString() {
+        return "Seller{" +
+                "sellerId='" + sellerId + '\'' +
+                '}';
+    }
+
+    public Seller(String firstName, String lastName,
+                  String email, String phoneNumber, String sellerId) {
+        super(firstName, lastName, email, phoneNumber);
+        this.sellerId = sellerId;
+        this.products = new ArrayList<>();
+
+
+    }
+
+
+    public String getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(String sellerId) {
+        this.sellerId = sellerId;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+}
+
+class Product {
+    private String productId;
+    private String name;
+    private String description;
+    private double price;
+    private String category;
+    private int quantity;
+    private Seller seller;
+
+    public Product(String productId, String name,
+                   String description, double price, String category, int quantity, Seller seller) {
+        this.productId = productId;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.category = category;
+        this.quantity = quantity;
+        this.seller = seller;
+    }
+
+    void DisplayProduct() {
+        System.out.println("Product ID :" + " " + getProductId());
+        System.out.println("Product Name :" + " " + getName());
+        System.out.println("Product Description :" + " " + getDescription());
+        System.out.println("Product Price :" + " " + getPrice());
+        System.out.println("Product Category :" + " " + getCategory());
+        System.out.println("Product Quantity :" + " " + getQuantity());
+        System.out.println();
+    }
+
+    public void updateQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public Seller getSeller() {
+        return seller;
+    }
+
+    public void setSeller(Seller seller) {
+        this.seller = seller;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId='" + productId + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                ", quantity=" + quantity +
+                ", seller=" + seller +
+                '}';
+    }
+}
