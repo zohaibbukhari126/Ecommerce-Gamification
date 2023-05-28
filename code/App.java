@@ -1,27 +1,110 @@
 import java.util.ArrayList;
-
+import java.io.*;
 import java.util.List;
+import java.util.Scanner;
+
 
 class App{
-    public static void mainMenu(){
-        System.out.println("\n0.Exit");
-        System.out.println("1.Login as Seller");
-        System.out.println("2.Login as Customer");
+        public static void searchProduct(List <Product> productArrayList){
+            System.out.println("Enter Product ID of product you want to remove");
+            Scanner sc = new Scanner(System.in);
+            String tempId = sc.next();
+            boolean found1 = false;
+            for (Product x : productArrayList) {
+                if (x.getProductId().equals(tempId)) {
+                    productArrayList.remove(x);
+                    System.out.println("Item removed successfully");
+                    found1 = true;
+                    return;
+                }
+            }
+            if (found1 == false)
+                System.out.println("Product with that id not found, sorry!");
+                return;
+          }
+        public static Seller inputSeller(){
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Entering Seller Details...\nEnter first name");
+            String firstName = sc.next();
+            System.out.println("Enter last name");
+            String lastName = sc.next();
+            System.out.println("Enter email");
+            String email = sc.next();
+            System.out.println("Enter phone number");
+            String phoneNumber = sc.next();
+            System.out.println("Enter seller id");
+            String sellerId = sc.next();
+            Seller seller = new Seller(firstName, lastName, email, phoneNumber, sellerId);
 
-    }
-    public static void sellerMenu() {
-        System.out.println("\n0.Exit");
-        System.out.println("1.Add Product");
-        System.out.println("2.View All Products");
-        System.out.println("3.Remove Product");
+            return seller;
+        }
 
-    }
-    public static void customerMenu(){
-        System.out.println("\n0.Exit");
-        System.out.println("1.View All Products");
-        System.out.println("2.Buy Product");
-    }
-}
+        public static Product inputProduct(Seller seller){
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Enter Product ID");
+            String id = sc.next();
+            System.out.println("Enter Product name");
+            String name = sc.next();
+            sc.nextLine();
+            System.out.println("Enter Product Description");
+            String description = sc.nextLine();
+            System.out.println("Enter Price");
+            double price = sc.nextDouble();
+            System.out.println("Enter Category");
+            String category = sc.next();
+            System.out.println("Enter Quantity");
+            int quantity = sc.nextInt();
+            Product product = new Product(id, name, description, price,
+                    category, quantity, seller);
+            return product;
+        }
+        public static void mainMenu(){
+            System.out.println("\n0.Exit");
+            System.out.println("1.Login as Seller");
+            System.out.println("2.Login as Customer");
+
+        }
+        public static void sellerMenu() {
+            System.out.println("\n0.Exit");
+            System.out.println("1.Add Product");
+            System.out.println("2.View All Products");
+            System.out.println("3.Remove Product");
+
+        }
+        public static void customerMenu(){  
+            System.out.println("\n0.Exit");
+            System.out.println("1.View All Products");
+            System.out.println("2.Buy Product");
+        }
+         public static void saveSeller(Seller seller, String fileName) {
+                try (FileWriter writer = new FileWriter(fileName,true)) {
+                    writer.write(seller.getFirstName() + "\n");
+                writer.write(seller.getLastName() + "\n");
+                writer.write(seller.getEmail() + "\n");
+                writer.write(seller.getPhoneNumber() + "\n");
+                writer.write(seller.getSellerId() + "\n");
+    
+                System.out.println("Seller details saved successfully.");
+            } catch (IOException e) {
+                System.out.println("Error saving seller details: " + e.getMessage());
+            }
+        }
+        public static void saveProduct(Product product, String fileName) {
+            try (FileWriter writer = new FileWriter(fileName,true)) {
+               writer.write(product.getProductId()+ "\n");
+               writer.write(product.getName()+ "\n");
+               writer.write(product.getDescription()+ "\n");
+               writer.write(String.valueOf(product.getPrice())+ "\n");
+               writer.write(product.getCategory()+ "\n");
+               writer.write(product.getQuantity()+ "\n");
+               writer.write(product.getSeller().getSellerId()+ "\n");
+                System.out.println("Product saved successfully.");
+                writer.close();
+            } catch (IOException e) {
+                System.out.println("Error saving product details: " + e.getMessage());
+            }
+        }
+        }
 class Person {
     private String firstName;
     private String lastName;
@@ -69,80 +152,15 @@ class Person {
         this.phoneNumber = phoneNumber;
     }
 }
-
-
-class Order {
-    private String orderId;
-    private Customer customer;
-    private ArrayList<Product> products;
-    private String status;
-
-    public Order(String orderId, Customer customer, ArrayList<Product> products, String status) {
-        this.orderId = orderId;
-        this.customer = customer;
-        this.products = products;
-        this.status = status;
-    }
-
-    public void updateStatus(String status) {
-        this.status = status;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(ArrayList<Product> products) {
-        this.products = products;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-}
 class Customer extends Person {
     private String customerId;
-    private List<Order> orders;
 
     public Customer(String firstName, String lastName,
                     String email, String phoneNumber, String customerId) {
         super(firstName, lastName, email, phoneNumber);
         this.customerId = customerId;
-        this.orders = new ArrayList<>();
     }
 
-    public void placeOrder(Order order) {
-        orders.add(order);
-    }
-
-    public Order viewOrder(String orderId) {
-        for (Order order : orders) {
-            if (order.getOrderId().equals(orderId)) {
-                return order;
-            }
-        }
-        return null;
-    }
     public String getCustomerId() {
         return customerId;
     }
@@ -151,13 +169,7 @@ class Customer extends Person {
         this.customerId = customerId;
     }
 
-    public List<Order> getOrders() {
-        return orders;
-    }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
 
 
 
