@@ -1,5 +1,6 @@
-    import java.util.*;
-    import java.lang.*;
+import java.lang.*;
+import java.io.*;
+import java.util.*;
     public class AppTest {
         public static void main(String[] args) {
             Scanner sc = new Scanner(System.in);
@@ -16,19 +17,9 @@
                         System.out.println("Exiting main menu...");
                         break;
                     case 1:
-                        System.out.println("Entering Seller Details...\nEnter first name");
-                        String firstName = sc.next();
-                        System.out.println("Enter last name");
-                        String lastName = sc.next();
-                        System.out.println("Enter email");
-                        String email = sc.next();
-                        System.out.println("Enter phone number");
-                        String phoneNumber = sc.next();
-                        System.out.println("Enter seller id");
-                        String sellerId = sc.next();
-                        Seller seller = new Seller(firstName, lastName, email, phoneNumber, sellerId);
+                        Seller seller = App.inputSeller();
                         personArrayList.add(seller);
-
+                        App.saveSeller(seller,"SellerData.txt");
 
                         int choice2 = -1;
                         while (choice2 != 0) {
@@ -39,23 +30,14 @@
                                     System.out.println("Exiting Seller Menu...");
                                     break;
                                 case 1:
-                                    System.out.println("Enter Product ID");
-                                    String id = sc.next();
-                                    System.out.println("Enter Product name");
-                                    String name = sc.next();
-                                    sc.nextLine();
-                                    System.out.println("Enter Product Description");
-                                    String description = sc.nextLine();
-                                    sc.nextLine();
-                                    System.out.println("Enter Price");
-                                    double price = sc.nextDouble();
-                                    System.out.println("Enter Category");
-                                    String category = sc.next();
-                                    System.out.println("Enter Quantity");
-                                    int quantity = sc.nextInt();
-                                    Product product = new Product(id, name, description, price,
-                                            category, quantity, seller);
+                                try{
+                                   Product product = App.inputProduct(seller);
                                     productArrayList.add(product);
+                                    App.saveProduct(product, "ProductData.txt");
+                                }
+                                catch(InputMismatchException e){
+                                    System.out.println(e.getMessage());
+                                }
                                     break;
                                 case 2:
                                     for (Product x : productArrayList) {
@@ -63,19 +45,7 @@
                                     }
                                     break;
                                 case 3:
-                                    System.out.println("Enter Product ID of product you want to remove");
-                                    String tempId = sc.next();
-                                    boolean found1 = false;
-                                    for (Product x : productArrayList) {
-                                        if (x.getProductId().equals(tempId)) {
-                                            productArrayList.remove(x);
-                                            System.out.println("Item removed successfully");
-                                            found1 = true;
-                                            break;
-                                        }
-                                    }
-                                    if (found1 == false)
-                                        System.out.println("Product with that id not found, sorry!");
+                                    App.searchProduct(productArrayList);
                                     break;
 
                                 default:
@@ -116,13 +86,8 @@
                                 default:
                                     System.out.println("Choice invalid, enter valid choice!");
                             }
-
-
-
-                        }
-                }
-
-
-            }
-        }
-    }
+                         }
+                     }
+             }
+         }
+   }
