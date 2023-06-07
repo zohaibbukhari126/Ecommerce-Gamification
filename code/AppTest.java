@@ -10,7 +10,7 @@ public class AppTest {
         int choice1 = -1;
         while (choice1 != 0) {
             App.mainMenu();
-            choice1 = sc.nextInt();
+                choice1 = sc.nextInt();
             switch (choice1) {
                 case 0:
                     System.out.println("Exiting main menu...");
@@ -34,8 +34,8 @@ public class AppTest {
                                     productArrayList.add(product);
                                     ArrayList<Product> products = seller.getProducts();
                                     products.add(product);
-                                } catch(InputMismatchException e) {
-                                    System.out.println(e.getMessage());
+                                } catch(InputMismatchException t) {
+                                    System.out.println(t.getMessage());
                                 }
                                 break;
                             case 2:
@@ -82,6 +82,7 @@ public class AppTest {
                                             System.out.println(x);
                                             System.out.println(x.getPrice() + " deducted from your account");
                                             x.setQuantity(x.getQuantity() - 1);
+                                            System.out.println("Remaining Quantity: "+x.getQuantity());
                                         }
                                     }
                                 }
@@ -112,7 +113,10 @@ public class AppTest {
                         }
                     }
                     break;
+                default:
+                    System.out.println("Invalid Input Between (0-3)");
+
             }
-        }
     }
-}
+                            }
+                                            }
