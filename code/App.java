@@ -142,6 +142,7 @@ public class App {
     }
 
     public static void clearDataMenu() {
+        System.out.println("\n0.Exit");
         System.out.println("1.Clear Seller Data");
         System.out.println("2.Clear Product Data");
         System.out.println();
