@@ -10,7 +10,7 @@ public class AppTest {
         int choice1 = -1;
         while (choice1 != 0) {
             App.mainMenu();
-                choice1 = sc.nextInt();
+            choice1 = sc.nextInt();
             switch (choice1) {
                 case 0:
                     System.out.println("Exiting main menu...");
@@ -74,20 +74,25 @@ public class AppTest {
                             case 2: {
                                 System.out.println("Enter Product ID you want to buy");
                                 String productID = sc.next();
+                                System.out.println("Enter Quantity");
+                                int quantity = sc.nextInt();
                                 for (Product x : productArrayList) {
                                     if (x.getProductId().equals(productID)) {
-                                        if (x.getQuantity() == 0) {
+                                        x.DisplayProduct();
+                                        if (x.getQuantity() <= 0) {
                                             System.out.println("Out of stock");
-                                        } else {
-                                            System.out.println(x);
-                                            System.out.println(x.getPrice() + " deducted from your account");
-                                            x.setQuantity(x.getQuantity() - 1);
+                                        }
+                                        else if (x.getQuantity() < quantity){
+                                            System.out.println("Not enough quantity");}
+                                        else
+                                            System.out.print(x.getQuantity() + " quantity reduced");
+                                            System.out.println(x.getPrice()*x.getQuantity() + " deducted from your account");
+                                            x.setQuantity(x.getQuantity() - quantity);
                                             System.out.println("Remaining Quantity: "+x.getQuantity());
                                         }
                                     }
                                 }
                                 break;
-                            }
                             default:
                                 System.out.println("Choice invalid, enter valid choice!");
                         }
@@ -117,6 +122,6 @@ public class AppTest {
                     System.out.println("Invalid Input Between (0-3)");
 
             }
+        }
     }
-                            }
-                                            }
+}
