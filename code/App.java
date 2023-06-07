@@ -106,7 +106,7 @@ public class App {
         String lastName = sc.next();
         System.out.println("Enter email");
         String email = sc.next();
-        System.out.println("Enter phone number");
+        System.out.println("Enter phone number ");
         String phoneNumber = sc.next();
         System.out.println("Enter seller id");
         String sellerId = sc.next();
