@@ -40,7 +40,7 @@ public class AppTest {
                                 break;
                             case 2:
                                 for (Product x : productArrayList) {
-                                  x.DisplayProduct();
+                                    x.DisplayProduct();
                                 }
                                 break;
                             case 3:
@@ -49,7 +49,7 @@ public class AppTest {
                             case 4:
                                 for(Product x: seller.getProducts()){
                                     x.DisplayProduct();
-                                    }
+                                }
                                 break;
                             default:
                                 System.out.println("Invalid choice, enter valid choice!");
