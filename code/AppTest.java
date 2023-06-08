@@ -84,15 +84,15 @@ public class AppTest {
                                         }
                                         else if (x.getQuantity() < quantity){
                                             System.out.println("Not enough quantity");}
-                                        else
-                                            System.out.print(x.getQuantity() + " quantity reduced");
-                                            System.out.println(x.getPrice()*x.getQuantity() + " deducted from your account");
-                                            x.setQuantity(x.getQuantity() - quantity);
-                                            System.out.println("Remaining Quantity: "+x.getQuantity());
-                                        }
+                                        else{
+                                            System.out.println(x.getQuantity() + " quantity reduced");
+                                        System.out.println(x.getPrice()*x.getQuantity() + " deducted from your account");
+                                        x.setQuantity(x.getQuantity() - quantity);
+                                        System.out.println("Remaining Quantity: "+x.getQuantity());}
                                     }
                                 }
-                                break;
+                            }
+                            break;
                             default:
                                 System.out.println("Choice invalid, enter valid choice!");
                         }
