@@ -2,48 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class App {
-    public static ArrayList<Person> readPersons(File file) {
-        ArrayList<Person> personArrayList = new ArrayList<>();
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            while (true) {
-                Person x = (Person) ois.readObject();
-                personArrayList.add(x);
-            }
-        } catch (ClassCastException e) {
-        } catch (ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        } catch (EOFException e) {
-            System.out.println(e.getMessage());
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-        return personArrayList;
-    }
-
-    public static ArrayList<Product> readProduct(File file) {
-        ArrayList<Product> productArrayList = new ArrayList<>();
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            while (true) {
-                Product x = (Product) ois.readObject();
-                productArrayList.add(x);
-            }
-        } catch (ClassCastException e) {
-            System.out.println(e.getMessage());
-        } catch (EOFException e) {
-            System.out.println(e.getMessage());
-        } catch (ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-        return productArrayList;
-    }
-
-    public static void clearFile(File file) {
+     public static void clearFile(File file) {
         try {
             FileOutputStream fos = new FileOutputStream(file);
             fos.getChannel().truncate(0);
@@ -53,37 +12,35 @@ public class App {
             System.out.println(e.getMessage());
         }
     }
+    public static <T> ArrayList<T> readObjects(File file) {
+        ArrayList<T> objectArrayList = new ArrayList<>();
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            while (true) {
+                T obj = (T) ois.readObject();
+                objectArrayList.add(obj);
+            }
+        } catch (EOFException e) {
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return objectArrayList;
+    }
 
-    public static void writePerson(ArrayList<Person> personArrayList, File file) {
+    public static <T> void writeObjects(ArrayList<T> objectArrayList, File file) {
         try {
             FileOutputStream fos = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            for (Person x : personArrayList) {
-                oos.writeObject(x);
+            for (T obj : objectArrayList) {
+                oos.writeObject(obj);
             }
             oos.close();
             fos.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-
     }
-
-    public static void writeProduct(ArrayList<Product> productArrayList, File file) {
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            for (Product x : productArrayList) {
-                oos.writeObject(x);
-            }
-            oos.close();
-            fos.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-    }
-
     public static void searchProduct(ArrayList<Product> productArrayList) {
         System.out.println("Enter Product ID of product you want to remove");
         Scanner sc = new Scanner(System.in);
@@ -98,21 +55,50 @@ public class App {
         System.out.println("Product with that id not found, sorry!");
     }
 
-    public static Seller inputSeller() {
+    public static Seller inputSeller(ArrayList<Person> personArrayList) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Entering Seller Details...\nEnter first name");
-        String firstName = sc.next();
-        System.out.println("Enter last name");
-        String lastName = sc.next();
-        System.out.println("Enter email");
-        String email = sc.next();
-        System.out.println("Enter phone number ");
-        String phoneNumber = sc.next();
-        System.out.println("Enter seller id");
-        String sellerId = sc.next();
-        Seller seller = new Seller(firstName, lastName, email, phoneNumber, sellerId);
-
-        return seller;
+        System.out.println("Are you a registered seller? (1: Login / 2: Register)");
+        int choice = sc.nextInt();
+        if (choice == 1) {
+            System.out.println("Enter your Seller ID:");
+            String sellerId = sc.next();
+            for (Person person : personArrayList) {
+                if (person instanceof Seller) {
+                    Seller seller = (Seller) person;
+                    if (seller.getSellerId().equals(sellerId)) {
+                        System.out.println("Login successful!");
+                        AppTest.loggedIn = true;
+                        return seller;
+                    }
+                }
+            }
+            System.out.println("Seller ID not found!");
+        } else if (choice == 2) {
+            System.out.println("Enter your Seller ID:");
+            String sellerId = sc.next();
+            for (Person person : personArrayList) {
+                if (person instanceof Seller) {
+                    Seller seller = (Seller) person;
+                    if (seller.getSellerId().equals(sellerId)) {
+                        System.out.println("Seller ID already exists!");
+                        return null;
+                    }
+                }
+            }
+            System.out.println("Enter first name");
+            String firstName = sc.next();
+            System.out.println("Enter last name");
+            String lastName = sc.next();
+            System.out.println("Enter email");
+            String email = sc.next();
+            System.out.println("Enter phone number");
+            String phoneNumber = sc.next();
+            Seller seller = new Seller(firstName, lastName, email, phoneNumber, sellerId);
+            personArrayList.add(seller);
+            System.out.println("Registration successful!");
+            return seller;
+        }
+        return null;
     }
 
     public static Product inputProduct(Seller seller) {
