@@ -2,10 +2,15 @@ import java.lang.*;
 import java.io.*;
 import java.util.*;
 public class AppTest {
+    public static boolean loggedIn = false;
     public static void main(String[] args) {
+
         Scanner sc = new Scanner(System.in);
-        ArrayList<Person> personArrayList = App.readPersons(new File("SellerData.txt"));
-        ArrayList<Product> productArrayList = App.readProduct(new File("ProductData.txt"));
+        ArrayList<Person> personArrayList = new ArrayList<>();
+        ArrayList<Product> productArrayList = new ArrayList<>();
+        personArrayList = App.readObjects(new File("SellerData.txt"));
+        productArrayList = App.readObjects(new File("ProductData.txt"));
+
 
         int choice1 = -1;
         while (choice1 != 0) {
@@ -14,19 +19,20 @@ public class AppTest {
             switch (choice1) {
                 case 0:
                     System.out.println("Exiting main menu...");
-                    App.writeProduct(productArrayList,new File("ProductData.txt"));
-                    App.writePerson(personArrayList, new File("SellerData.txt"));
+                    App.writeObjects(productArrayList,new File("ProductData.txt"));
+                    App.writeObjects(personArrayList, new File("SellerData.txt"));
                     break;
                 case 1:
-                    Seller seller = App.inputSeller();
+                    Seller seller = App.inputSeller(personArrayList);
                     personArrayList.add(seller);
                     int choice2 = -1;
-                    while (choice2 != 0) {
+                    while (choice2 != 0 && loggedIn == true) {
                         App.sellerMenu();
                         choice2 = sc.nextInt();
                         switch (choice2) {
                             case 0:
                                 System.out.println("Exiting Seller Menu...");
+                                AppTest.loggedIn = false;
                                 break;
                             case 1:
                                 try {
@@ -86,9 +92,9 @@ public class AppTest {
                                             System.out.println("Not enough quantity");}
                                         else{
                                             System.out.println(x.getQuantity() + " quantity reduced");
-                                        System.out.println(x.getPrice()*x.getQuantity() + " deducted from your account");
-                                        x.setQuantity(x.getQuantity() - quantity);
-                                        System.out.println("Remaining Quantity: "+x.getQuantity());}
+                                            System.out.println(x.getPrice()*x.getQuantity() + " deducted from your account");
+                                            x.setQuantity(x.getQuantity() - quantity);
+                                            System.out.println("Remaining Quantity: "+x.getQuantity());}
                                     }
                                 }
                             }
