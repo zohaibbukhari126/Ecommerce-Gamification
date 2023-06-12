@@ -3,11 +3,12 @@ import java.io.*;
 import java.util.*;
 public class AppTest {
     public static boolean loggedIn = false;
+
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
-        ArrayList<Person> personArrayList = new ArrayList<>();
-        ArrayList<Product> productArrayList = new ArrayList<>();
+        ArrayList<Person> personArrayList;
+        ArrayList<Product> productArrayList;
         personArrayList = App.readObjects(new File("SellerData.txt"));
         productArrayList = App.readObjects(new File("ProductData.txt"));
 
@@ -19,12 +20,12 @@ public class AppTest {
             switch (choice1) {
                 case 0:
                     System.out.println("Exiting main menu...");
-                    App.writeObjects(productArrayList,new File("ProductData.txt"));
-                    App.writeObjects(personArrayList, new File("SellerData.txt"));
+                    App.saveData(personArrayList, productArrayList);
                     break;
                 case 1:
                     Seller seller = App.inputSeller(personArrayList);
                     personArrayList.add(seller);
+                    App.saveData(personArrayList, productArrayList);
                     int choice2 = -1;
                     while (choice2 != 0 && loggedIn == true) {
                         App.sellerMenu();
@@ -33,6 +34,7 @@ public class AppTest {
                             case 0:
                                 System.out.println("Exiting Seller Menu...");
                                 AppTest.loggedIn = false;
+                                App.saveData(personArrayList, productArrayList);
                                 break;
                             case 1:
                                 try {
@@ -40,22 +42,20 @@ public class AppTest {
                                     productArrayList.add(product);
                                     ArrayList<Product> products = seller.getProducts();
                                     products.add(product);
+                                    App.saveData(personArrayList, productArrayList);
                                 } catch(InputMismatchException t) {
                                     System.out.println(t.getMessage());
                                 }
+
                                 break;
                             case 2:
-                                for (Product x : productArrayList) {
+                                for(Product x: seller.getProducts()){
                                     x.DisplayProduct();
                                 }
                                 break;
                             case 3:
-                                App.searchProduct(productArrayList);
-                                break;
-                            case 4:
-                                for(Product x: seller.getProducts()){
-                                    x.DisplayProduct();
-                                }
+                                App.deleteProduct(productArrayList,seller);
+                                App.saveData(personArrayList, productArrayList);
                                 break;
                             default:
                                 System.out.println("Invalid choice, enter valid choice!");
@@ -78,36 +78,44 @@ public class AppTest {
                                 }
                                 break;
                             case 2: {
-                                System.out.println("Enter Product ID you want to buy");
-                                String productID = sc.next();
+                                System.out.println("Enter Product ID or Name you want to buy");
+                                String searchQuery = sc.next();
                                 System.out.println("Enter Quantity");
                                 int quantity = sc.nextInt();
+                                boolean productFound = false;
+
                                 for (Product x : productArrayList) {
-                                    if (x.getProductId().equals(productID)) {
+                                    if (x.getProductId().equalsIgnoreCase(searchQuery) || x.getName().equalsIgnoreCase(searchQuery)) {
+                                        productFound = true;
                                         x.DisplayProduct();
                                         if (x.getQuantity() <= 0) {
                                             System.out.println("Out of stock");
-                                        }
-                                        else if (x.getQuantity() < quantity){
-                                            System.out.println("Not enough quantity");}
-                                        else{
-                                            System.out.println(x.getQuantity() + " quantity reduced");
-                                            System.out.println(x.getPrice()*x.getQuantity() + " deducted from your account");
+                                        } else if (x.getQuantity() < quantity) {
+                                            System.out.println("Not enough quantity");
+                                        } else {
+                                            System.out.println(quantity + " quantity reduced");
+                                            System.out.println(x.getPrice() * quantity + " deducted from your account");
                                             x.setQuantity(x.getQuantity() - quantity);
-                                            System.out.println("Remaining Quantity: "+x.getQuantity());}
+                                            System.out.println("Remaining Quantity: " + x.getQuantity());
+                                        }
+                                        break;
                                     }
                                 }
+
+                                if (!productFound) {
+                                    System.out.println("Product not found!");
+                                }
+                                break;
                             }
-                            break;
                             default:
                                 System.out.println("Choice invalid, enter valid choice!");
                         }
                     }
                     break;
                 case 3:
-                    App.clearDataMenu();
                     int choice4 = -1;
                     while (choice4 != 0) {
+                        App.clearDataMenu();
                         choice4 = sc.nextInt();
                         switch (choice4) {
                             case 0:
