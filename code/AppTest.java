@@ -38,11 +38,13 @@ public class AppTest {
                                 break;
                             case 1:
                                 try {
-                                    Product product = App.inputProduct(seller);
-                                    productArrayList.add(product);
-                                    ArrayList<Product> products = seller.getProducts();
-                                    products.add(product);
-                                    App.saveData(personArrayList, productArrayList);
+                                    Product product = App.inputProduct(seller,productArrayList);
+                                    if (product != null) {
+                                        productArrayList.add(product);
+                                        ArrayList<Product> products = seller.getProducts();
+                                        products.add(product);
+                                        App.saveData(personArrayList, productArrayList);
+                                    }
                                 } catch(InputMismatchException t) {
                                     System.out.println(t.getMessage());
                                 }
@@ -73,9 +75,12 @@ public class AppTest {
                                 System.out.println("Exiting customer menu...");
                                 break;
                             case 1:
-                                for (Product x : productArrayList) {
-                                    x.DisplayProduct();
+                                try {
+                                    for (Product x : productArrayList) {
+                                        x.DisplayProduct();
+                                    }
                                 }
+                                catch(NullPointerException e){}
                                 break;
                             case 2: {
                                 System.out.println("Enter Product ID or Name you want to buy");
