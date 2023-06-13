@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 import java.io.*;
 
@@ -51,11 +52,11 @@ public class App {
         Scanner sc = new Scanner(System.in);
         String tempId = sc.next();
         for (Product x : productArrayList) {
-                if (x.getSeller() == seller && x.getProductId().equals(tempId)) {
-                    productArrayList.remove(x);
-                    System.out.println("Item removed successfully");
-                    return;
-                }
+            if (x.getSeller() == seller && x.getProductId().equals(tempId)) {
+                productArrayList.remove(x);
+                System.out.println("Item removed successfully");
+                return;
+            }
         }
         System.out.println("None of your products match that id, sorry!");
     }
@@ -69,56 +70,62 @@ public class App {
                 System.out.println("Invalid entry, Enter 1 to login, 2 to Register!");
                 choice = sc.nextInt();}
 
-               if (choice == 1) {
-                    System.out.println("Enter your Seller ID:");
-                    String sellerId = sc.next();
-                    for (Person person : personArrayList) {
-                        if (person instanceof Seller) {
-                            Seller seller = (Seller) person;
-                            if (seller.getSellerId().equals(sellerId)) {
-                                System.out.println("Login successful!");
-                                AppTest.loggedIn = true;
-                                System.out.println(seller);
-                                return seller;
-                            }
+            if (choice == 1) {
+                System.out.println("Enter your Seller ID:");
+                String sellerId = sc.next();
+                for (Person person : personArrayList) {
+                    if (person instanceof Seller) {
+                        Seller seller = (Seller) person;
+                        if (seller.getSellerId().equals(sellerId)) {
+                            System.out.println("Login successful!");
+                            AppTest.loggedIn = true;
+                            System.out.println(seller);
+                            return seller;
                         }
                     }
-                    System.out.println("Seller ID not found!");
-                } else if (choice == 2) {
-                    System.out.println("Enter your Seller ID:");
-                    String sellerId = sc.next();
-                    for (Person person : personArrayList) {
-                        if (person instanceof Seller) {
-                            Seller seller = (Seller) person;
-                            if (seller.getSellerId().equals(sellerId)) {
-                                System.out.println("Seller ID already exists!");
-                                return null;
-                            }
-                        }
-                    }
-                    System.out.println("Enter first name");
-                    String firstName = sc.next();
-                    System.out.println("Enter last name");
-                    String lastName = sc.next();
-                    System.out.println("Enter email");
-                    String email = sc.next();
-                    System.out.println("Enter phone number");
-                    String phoneNumber = sc.next();
-                    Seller seller = new Seller(firstName, lastName, email, phoneNumber, sellerId);
-                    personArrayList.add(seller);
-                    System.out.println("Registration successful!");
-                    return seller;
                 }
+                System.out.println("Seller ID not found!");
+            } else if (choice == 2) {
+                System.out.println("Enter your Seller ID:");
+                String sellerId = sc.next();
+                for (Person person : personArrayList) {
+                    if (person instanceof Seller) {
+                        Seller seller = (Seller) person;
+                        if (seller.getSellerId().equals(sellerId)) {
+                            System.out.println("Seller ID already exists!");
+                            return null;
+                        }
+                    }
+                }
+                System.out.println("Enter first name");
+                String firstName = sc.next();
+                System.out.println("Enter last name");
+                String lastName = sc.next();
+                System.out.println("Enter email");
+                String email = sc.next();
+                System.out.println("Enter phone number");
+                String phoneNumber = sc.next();
+                Seller seller = new Seller(firstName, lastName, email, phoneNumber, sellerId);
+                personArrayList.add(seller);
+                System.out.println("Registration successful!");
+                return seller;
+            }
         }
         while(choice!=1 && choice !=2);
 
         return null;
     }
 
-    public static Product inputProduct(Seller seller) {
+    public static Product inputProduct(Seller seller,ArrayList<Product> productArrayList) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter Product ID");
         String id = sc.next();
+        for (Product x : productArrayList) {
+            if (x.getProductId().equalsIgnoreCase(id)) {
+                System.out.println("Product with the same ID already exists!");
+                return null;
+            }
+        }
         System.out.println("Enter Product name");
         String name = sc.next();
         sc.nextLine();
@@ -193,9 +200,9 @@ class Person implements Serializable {
 
     @Override
     public String toString() {
-            return "Name: " + firstName + " " + lastName +
-                    "\n" + "Email: " + getEmail() + "\n" +
-                    "Phone Number: " + getPhoneNumber();
+        return "Name: " + firstName + " " + lastName +
+                "\n" + "Email: " + getEmail() + "\n" +
+                "Phone Number: " + getPhoneNumber();
     }
 }
 
