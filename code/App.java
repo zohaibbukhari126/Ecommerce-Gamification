@@ -11,8 +11,7 @@ public class App {
         try {
             ArrayList<Object> emptyList = new ArrayList<>();
             writeObjects(emptyList, file);
-
-            System.out.println("File cleared successfully");
+            AppTest.showAlert("File cleared successfully!");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
