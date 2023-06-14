@@ -1,28 +1,31 @@
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.*;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.*;
-
-import java.awt.*;
 import java.lang.*;
 import java.io.*;
 import java.util.*;
+import javafx.scene.layout.*;
+import javafx.scene.control.*;
 public class AppTest extends Application implements EventHandler<ActionEvent> {
+    private static Stage stage;
+    public static Label label1 = new Label();
     public static boolean loggedIn = false;
-
+    public static Background bg = new Background(new BackgroundFill(Color.AZURE,null,null));
+    private static  ArrayList<Person> personArrayList;
+    private static  ArrayList<Product> productArrayList;
     public static void main(String[] args) {
 
-        launch(args);
-
-        Scanner sc = new Scanner(System.in);
-        ArrayList<Person> personArrayList;
-        ArrayList<Product> productArrayList;
         personArrayList = App.readObjects(new File("SellerData.txt"));
         productArrayList = App.readObjects(new File("ProductData.txt"));
+        Scanner sc = new Scanner(System.in);
+        launch(args);
 
 
         int choice1 = -1;
@@ -32,7 +35,7 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
             switch (choice1) {
                 case 0:
                     System.out.println("Exiting main menu...");
-                    App.saveData(personArrayList, productArrayList);
+
                     break;
                 case 1:
                     Seller seller = App.inputSeller(personArrayList);
@@ -161,20 +164,130 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
-        Group root = new Group();
-        Scene scene = new Scene(root, 1000, 600, Color.AZURE);
+    public void start(Stage primaryStage) throws Exception {
+        stage = primaryStage;
         Image image1 = new Image("image1.png");
-        stage.setTitle("Ecommerce Application");
         stage.getIcons().add(image1);
+        stage.setTitle("Ecommerce Application");
+        stage.getIcons().add(new Image("image1.png"));
 
-        stage.setResizable(false);
-        stage.setScene(scene);
+        Scene mainMenuScene = createMainMenuScene();
+        stage.setScene(mainMenuScene);
         stage.show();
+    }
 
+    private void openSellerMenuScene(Scene previousScene) {
+        Scene sellerMenuScene = createSellerMenuScene(previousScene);
+        stage.setScene(sellerMenuScene);
+    }
+
+    private void openCustomerMenuScene(Scene previousScene) {
+        Scene customerMenuScene = createCustomerMenuScene(previousScene);
+        stage.setScene(customerMenuScene);
+    }
+
+    private void openClearDataMenuScene(Scene previousScene) {
+        Scene clearDataMenuScene = createClearDataMenuScene(previousScene);
+        stage.setScene(clearDataMenuScene);
+    }
+
+
+    private Scene createMainMenuScene() {
+        VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(root, 960, 600, Color.AZURE);
+        Button sellerButton = new Button("View as Seller");
+        Button customerButton = new Button("View as Customer");
+        Button clearDataButton = new Button("Clear Data");
+        Button exitButton = new Button("Exit");
+
+        sellerButton.setOnAction(e -> openSellerMenuScene(scene));
+        customerButton.setOnAction(e -> openCustomerMenuScene(scene));
+        clearDataButton.setOnAction(e -> openClearDataMenuScene(scene));
+        exitButton.setOnAction(e->{
+                App.saveData(personArrayList, productArrayList);
+                stage.close();
+        });
+
+        root.getChildren().addAll(sellerButton, customerButton, clearDataButton, exitButton);
+        root.setBackground(new Background(new BackgroundFill(Color.AZURE, null, null)));
+
+        return scene;
+    }
+
+    private Scene createSellerMenuScene(Scene previousScene) {
+        VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(root, 960, 600, Color.AZURE);
+        Button backButton = new Button("Back to Main Menu");
+        Button addProductButton = new Button("Add Product");
+        Button viewProductsButton = new Button("View Your Products");
+        Button removeProductButton = new Button("Remove Product");
+
+        backButton.setOnAction(event -> stage.setScene(previousScene));
+
+
+        addProductButton.setOnAction(e -> {
+
+        });
+
+        viewProductsButton.setOnAction(e -> {
+
+        });
+
+        removeProductButton.setOnAction(e -> {
+        });
+        root.getChildren().addAll(addProductButton,viewProductsButton,removeProductButton,backButton);
+        root.setBackground(bg);
+
+        return scene;
+    }
+
+    private Scene createCustomerMenuScene(Scene previousScene) {
+        VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(root, 960, 600, Color.AZURE);
+        Button backButton = new Button("Back to Main Menu");
+        backButton.setOnAction(event -> stage.setScene(previousScene));
+
+        root.getChildren().add(backButton);
+        root.setBackground(bg);
+
+        return scene;
+    }
+
+    private Scene createClearDataMenuScene(Scene previousScene) {
+        VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(root, 960, 600, Color.AZURE);
+        Button clearSellerDataButton = new Button("Clear Seller Data");
+        Button clearProductDataButton = new Button("Clear Product Data");
+        Button backButton = new Button("Back to Main Menu");
+
+        clearSellerDataButton.setOnAction(e -> {
+            App.clearFile(new File("SellerData.txt"));});
+
+        clearProductDataButton.setOnAction(e -> {
+            App.clearFile(new File("ProductData.txt"));
+        });
+
+        backButton.setOnAction(event -> stage.setScene(previousScene));
+
+        root.getChildren().addAll(clearSellerDataButton, clearProductDataButton, backButton);
+        root.setBackground(bg);
+
+        return scene;
     }
 
     @Override
     public void handle(ActionEvent actionEvent) {
+
+    }
+    public static void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Ecommerce Application");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
