@@ -1,10 +1,22 @@
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.*;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.stage.*;
+
+import java.awt.*;
 import java.lang.*;
 import java.io.*;
 import java.util.*;
-public class AppTest {
+public class AppTest extends Application implements EventHandler<ActionEvent> {
     public static boolean loggedIn = false;
 
     public static void main(String[] args) {
+
+        launch(args);
 
         Scanner sc = new Scanner(System.in);
         ArrayList<Person> personArrayList;
@@ -38,25 +50,28 @@ public class AppTest {
                                 break;
                             case 1:
                                 try {
-                                    Product product = App.inputProduct(seller,productArrayList);
+                                    Product product = App.inputProduct(seller, productArrayList);
                                     if (product != null) {
                                         productArrayList.add(product);
                                         ArrayList<Product> products = seller.getProducts();
                                         products.add(product);
                                         App.saveData(personArrayList, productArrayList);
                                     }
-                                } catch(InputMismatchException t) {
+                                } catch (InputMismatchException t) {
                                     System.out.println(t.getMessage());
                                 }
 
                                 break;
                             case 2:
-                                for(Product x: seller.getProducts()){
-                                    x.DisplayProduct();
+                                try {
+                                    for (Product x : seller.getProducts()) {
+                                        x.DisplayProduct();
+                                    }
+                                } catch (NullPointerException e) {
                                 }
                                 break;
                             case 3:
-                                App.deleteProduct(productArrayList,seller);
+                                App.deleteProduct(productArrayList, seller);
                                 App.saveData(personArrayList, productArrayList);
                                 break;
                             default:
@@ -79,8 +94,8 @@ public class AppTest {
                                     for (Product x : productArrayList) {
                                         x.DisplayProduct();
                                     }
+                                } catch (NullPointerException e) {
                                 }
-                                catch(NullPointerException e){}
                                 break;
                             case 2: {
                                 System.out.println("Enter Product ID or Name you want to buy");
@@ -142,5 +157,24 @@ public class AppTest {
 
             }
         }
+
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        Group root = new Group();
+        Scene scene = new Scene(root, 1000, 600, Color.AZURE);
+        Image image1 = new Image("image1.png");
+        stage.setTitle("Ecommerce Application");
+        stage.getIcons().add(image1);
+
+        stage.setResizable(false);
+        stage.setScene(scene);
+        stage.show();
+
+    }
+
+    @Override
+    public void handle(ActionEvent actionEvent) {
     }
 }
