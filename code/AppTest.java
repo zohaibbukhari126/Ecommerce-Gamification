@@ -178,8 +178,8 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         stage.show();
     }
 
-    private void openSellerMenuScene(Scene previousScene) {
-        Scene sellerMenuScene = createSellerMenuScene(previousScene);
+    private void openSellerMenuScene(Scene previousScene,Seller seller) {
+        Scene sellerMenuScene = createSellerMenuScene(previousScene,seller);
         stage.setScene(sellerMenuScene);
     }
 
@@ -192,18 +192,18 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         Scene clearDataMenuScene = createClearDataMenuScene(previousScene);
         stage.setScene(clearDataMenuScene);
     }
-    private void openAddProductMenuScene(Scene previousScene) {
-        Scene addProductMenuScene = createAddProductMenuScene(previousScene);
+    private void openAddProductMenuScene(Scene previousScene,Seller seller) {
+        Scene addProductMenuScene = createAddProductMenuScene(previousScene,seller);
         stage.setScene(addProductMenuScene);
     }
 
-    private void openViewYourProductsMenuScene(Scene previousScene) {
-        Scene viewProductsMenuScene = createViewYourProductsMenuScene(previousScene);
+    private void openViewYourProductsMenuScene(Scene previousScene,Seller seller) {
+        Scene viewProductsMenuScene = createViewYourProductsMenuScene(previousScene,seller);
         stage.setScene(viewProductsMenuScene);
     }
 
-    private void openRemoveProductMenuScene(Scene previousScene) {
-        Scene removeProductMenuScene = createRemoveProductMenuScene(previousScene);
+    private void openRemoveProductMenuScene(Scene previousScene,Seller seller) {
+        Scene removeProductMenuScene = createRemoveProductMenuScene(previousScene,seller);
         stage.setScene(removeProductMenuScene);
     }
     private void openViewProductsMenuScene(Scene previousScene) {
@@ -215,7 +215,10 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         Scene buyProductScene = createBuyProductScene(previousScene);
         stage.setScene(buyProductScene);
     }
-
+    private void openSellerLogin(Scene previousScene) {
+        Scene sellerLogin = createSellerLoginScene(previousScene);
+        stage.setScene(sellerLogin);
+    }
 
 
     private Scene createMainMenuScene() {
@@ -227,7 +230,7 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         Button clearDataButton = new Button("Clear Data");
         Button exitButton = new Button("Exit");
 
-        sellerButton.setOnAction(e -> openSellerMenuScene(scene));
+        sellerButton.setOnAction(e -> openSellerLogin(scene));
         customerButton.setOnAction(e -> openCustomerMenuScene(scene));
         clearDataButton.setOnAction(e -> openClearDataMenuScene(scene));
         exitButton.setOnAction(e->{
@@ -241,44 +244,85 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         return scene;
     }
 
-    private Scene createSellerMenuScene(Scene previousScene) { VBox root = new VBox(10);
+    private Scene createSellerMenuScene(Scene previousScene,Seller seller) {
+            VBox root = new VBox(10);
+            root.setAlignment(Pos.CENTER);
+            Scene scene = new Scene(root, 960, 600, Color.AZURE);
+            Button viewYourProductButton = new Button("View Your Products");
+            Button backButton = new Button("Back to Main Menu");
+             Button addProductButton = new Button("Add Product");
+
+            backButton.setOnAction(e -> stage.setScene(previousScene));
+            viewYourProductButton.setOnAction(e -> openViewYourProductsMenuScene(scene,seller));
+            addProductButton.setOnAction(e -> openAddProductMenuScene(scene,seller));
+
+            Button removeProductButton = new Button("Remove Product");
+            removeProductButton.setOnAction(e -> openRemoveProductMenuScene(scene,seller));
+
+            root.getChildren().addAll(viewYourProductButton, addProductButton, removeProductButton, backButton);
+
+            return scene;
+        }
+    private Scene createSellerLoginScene(Scene previousScene){
+        VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
         Scene scene = new Scene(root, 960, 600, Color.AZURE);
-        Button backButton = new Button("Back to Main Menu");
+
+        Button backButton = new Button("Back to Login page");
+        backButton.setOnAction(e -> stage.setScene(previousScene));
+
         Button loginButton = new Button("Login");
         Button registerButton = new Button("Register");
-        TextField sellerIdField = new TextField();
+
+        TextField sellerIdTextField = new TextField();
+        sellerIdTextField.setPromptText("Seller ID");
+
+        TextField firstNameTextField = new TextField();
+        firstNameTextField.setPromptText("First Name");
+
+        TextField lastNameTextField = new TextField();
+        lastNameTextField.setPromptText("Last Name");
+
+        TextField emailTextField = new TextField();
+        emailTextField.setPromptText("Email");
+
+        TextField phoneNumberTextField = new TextField();
+        phoneNumberTextField.setPromptText("Phone Number");
+
+        Label messageLabel = new Label();
+
         loginButton.setOnAction(e -> {
-            String sellerId = sellerIdField.getText();
+            String sellerId = sellerIdTextField.getText();
             Seller seller = findSeller(sellerId);
+
             if (seller != null) {
-                showAlert("Login successful");
+                messageLabel.setText("Login successful!");
+                openSellerMenuScene(scene,seller);
             } else {
-                showAlert("Seller ID Not found");
+                messageLabel.setText("Seller ID not found!");
             }
         });
-
         registerButton.setOnAction(e -> {
-            String sellerId = sellerIdField.getText();
-            Seller seller = findSeller(sellerId);
-            if (seller != null) {
-                System.out.println("Seller ID already exists!");
+            String sellerId = sellerIdTextField.getText();
+            Seller existingSeller = findSeller(sellerId);
+            if (existingSeller != null) {
+                messageLabel.setText("Seller ID already exists!");
             } else {
-                System.out.println("Registration successful!");
+                String firstName = firstNameTextField.getText();
+                String lastName = lastNameTextField.getText();
+                String email = emailTextField.getText();
+                String phoneNumber = phoneNumberTextField.getText();
+
+                Seller seller = new Seller(firstName, lastName, email, phoneNumber, sellerId);
+                personArrayList.add(seller);
+                messageLabel.setText("Registration successful!");
+                openSellerMenuScene(scene,seller);
+
             }
         });
 
-        backButton.setOnAction(event -> {
-            stage.setScene(previousScene);
-            sellerIdField.clear();
-        });
-        VBox sellerLoginForm = new VBox(10);
-        sellerLoginForm.setAlignment(Pos.CENTER);
-        sellerLoginForm.getChildren().addAll(new Label("Seller ID:"),sellerIdField,
-                new HBox(10, loginButton, registerButton)
-        );
-        root.getChildren().addAll(sellerLoginForm, backButton);
-        root.setBackground(bg);
+        root.getChildren().addAll(sellerIdTextField, firstNameTextField, lastNameTextField, emailTextField, phoneNumberTextField, loginButton, registerButton, messageLabel, backButton);
+
         return scene;
     }
 
@@ -327,48 +371,58 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
 
         return scene;
     }
-    private Scene createAddProductMenuScene(Scene previousScene) {
+    private Scene createAddProductMenuScene(Scene previousScene,Seller seller) {
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
         Scene scene = new Scene(root, 960, 600, Color.AZURE);
         Button backButton = new Button("Back to Seller Menu");
-        Button addButton = new Button("Add Product");
 
         backButton.setOnAction(event -> stage.setScene(previousScene));
-        addButton.setOnAction(e -> {
-          });
-
-        root.getChildren().addAll(addButton, backButton);
+        root.getChildren().addAll(backButton);
         root.setBackground(bg);
 
         return scene;
     }
 
-    private Scene createViewYourProductsMenuScene(Scene previousScene) {
+    private Scene createViewYourProductsMenuScene(Scene previousScene,Seller seller) {
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(root, 960, 600, Color.AZURE);
+        ScrollPane scrollPane = new ScrollPane(root);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+        Scene scene = new Scene(scrollPane, 960, 600, Color.AZURE);
         Button backButton = new Button("Back to Seller Menu");
         backButton.setOnAction(event -> stage.setScene(previousScene));
+        for (Product product : seller.getProducts()) {
+            Label productIdLabel = new Label("Product ID: " + product.getProductId());
+            Label productNameLabel = new Label("Product Name: " + product.getName());
+            Label productDescLabel = new Label("Product Description: " + product.getDescription());
+            Label productPriceLabel = new Label("Product Price: " + product.getPrice());
+            Label productCategoryLabel = new Label("Product Category: " + product.getCategory());
+            Label productQuantityLabel = new Label("Product Quantity: " + product.getQuantity());
+            Label productSellerIDLabel = new Label("Product Seller ID: " + product.getSeller().getSellerId());
+            Label newLineLabel = new Label("\n");
+            root.getChildren().addAll(productIdLabel, productNameLabel,
+                    productDescLabel,productPriceLabel,
+                    productCategoryLabel,productQuantityLabel,productSellerIDLabel,newLineLabel);
 
-        root.getChildren().add(backButton);
+        }
+        root.getChildren().addAll(backButton);
         root.setBackground(bg);
+        scene.setRoot(root);
 
         return scene;
     }
 
-    private Scene createRemoveProductMenuScene(Scene previousScene) {
+    private Scene createRemoveProductMenuScene(Scene previousScene,Seller seller) {
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
         Scene scene = new Scene(root, 960, 600, Color.AZURE);
         Button backButton = new Button("Back to Seller Menu");
-        Button removeButton = new Button("Remove Product");
 
         backButton.setOnAction(event -> stage.setScene(previousScene));
-        removeButton.setOnAction(e -> {
-        });
 
-        root.getChildren().addAll(removeButton, backButton);
+        root.getChildren().addAll(backButton);
         root.setBackground(bg);
 
         return scene;
@@ -424,7 +478,10 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
     private Scene createViewProductsMenuScene(Scene previousScene) {
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(root, 960, 600, Color.AZURE);
+        ScrollPane scrollPane = new ScrollPane(root);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+        Scene scene = new Scene(scrollPane, 960, 600, Color.AZURE);
         Button backButton = new Button("Back to Customer Menu");
         backButton.setOnAction(event -> stage.setScene(previousScene));
 
@@ -435,10 +492,11 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
             Label productPriceLabel = new Label("Product Price: " + product.getPrice());
             Label productCategoryLabel = new Label("Product Category: " + product.getCategory());
             Label productQuantityLabel = new Label("Product Quantity: " + product.getQuantity());
+            Label productSellerIDLabel = new Label("Product Seller ID: " + product.getSeller().getSellerId());
             Label newLineLabel = new Label("\n");
             root.getChildren().addAll(productIdLabel, productNameLabel,
                     productDescLabel,productPriceLabel,
-                    productCategoryLabel,productQuantityLabel,newLineLabel);
+                    productCategoryLabel,productQuantityLabel,productSellerIDLabel,newLineLabel);
 
         }
         root.getChildren().addAll(backButton);
