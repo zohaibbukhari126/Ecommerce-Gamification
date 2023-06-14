@@ -108,7 +108,8 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
                                 boolean productFound = false;
 
                                 for (Product x : productArrayList) {
-                                    if (x.getProductId().equalsIgnoreCase(searchQuery) || x.getName().equalsIgnoreCase(searchQuery)) {
+                                    if (x.getProductId().equalsIgnoreCase(searchQuery) ||
+                                            x.getName().equalsIgnoreCase(searchQuery)) {
                                         productFound = true;
                                         x.DisplayProduct();
                                         if (x.getQuantity() <= 0) {
@@ -117,7 +118,8 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
                                             System.out.println("Not enough quantity");
                                         } else {
                                             System.out.println(quantity + " quantity reduced");
-                                            System.out.println(x.getPrice() * quantity + " deducted from your account");
+                                            System.out.println(x.getPrice() * quantity +
+                                                    " deducted from your account");
                                             x.setQuantity(x.getQuantity() - quantity);
                                             System.out.println("Remaining Quantity: " + x.getQuantity());
                                         }
@@ -190,6 +192,30 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         Scene clearDataMenuScene = createClearDataMenuScene(previousScene);
         stage.setScene(clearDataMenuScene);
     }
+    private void openAddProductMenuScene(Scene previousScene) {
+        Scene addProductMenuScene = createAddProductMenuScene(previousScene);
+        stage.setScene(addProductMenuScene);
+    }
+
+    private void openViewYourProductsMenuScene(Scene previousScene) {
+        Scene viewProductsMenuScene = createViewYourProductsMenuScene(previousScene);
+        stage.setScene(viewProductsMenuScene);
+    }
+
+    private void openRemoveProductMenuScene(Scene previousScene) {
+        Scene removeProductMenuScene = createRemoveProductMenuScene(previousScene);
+        stage.setScene(removeProductMenuScene);
+    }
+    private void openViewProductsMenuScene(Scene previousScene) {
+        Scene viewProductsMenuScene = createViewProductsMenuScene(previousScene);
+        stage.setScene(viewProductsMenuScene);
+    }
+
+    private void openBuyProductScene(Scene previousScene) {
+        Scene buyProductScene = createBuyProductScene(previousScene);
+        stage.setScene(buyProductScene);
+    }
+
 
 
     private Scene createMainMenuScene() {
@@ -215,31 +241,44 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         return scene;
     }
 
-    private Scene createSellerMenuScene(Scene previousScene) {
-        VBox root = new VBox(10);
+    private Scene createSellerMenuScene(Scene previousScene) { VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
         Scene scene = new Scene(root, 960, 600, Color.AZURE);
         Button backButton = new Button("Back to Main Menu");
-        Button addProductButton = new Button("Add Product");
-        Button viewProductsButton = new Button("View Your Products");
-        Button removeProductButton = new Button("Remove Product");
-
-        backButton.setOnAction(event -> stage.setScene(previousScene));
-
-
-        addProductButton.setOnAction(e -> {
-
+        Button loginButton = new Button("Login");
+        Button registerButton = new Button("Register");
+        TextField sellerIdField = new TextField();
+        loginButton.setOnAction(e -> {
+            String sellerId = sellerIdField.getText();
+            Seller seller = findSeller(sellerId);
+            if (seller != null) {
+                showAlert("Login successful");
+            } else {
+                showAlert("Seller ID Not found");
+            }
         });
 
-        viewProductsButton.setOnAction(e -> {
-
+        registerButton.setOnAction(e -> {
+            String sellerId = sellerIdField.getText();
+            Seller seller = findSeller(sellerId);
+            if (seller != null) {
+                System.out.println("Seller ID already exists!");
+            } else {
+                System.out.println("Registration successful!");
+            }
         });
 
-        removeProductButton.setOnAction(e -> {
+        backButton.setOnAction(event -> {
+            stage.setScene(previousScene);
+            sellerIdField.clear();
         });
-        root.getChildren().addAll(addProductButton,viewProductsButton,removeProductButton,backButton);
+        VBox sellerLoginForm = new VBox(10);
+        sellerLoginForm.setAlignment(Pos.CENTER);
+        sellerLoginForm.getChildren().addAll(new Label("Seller ID:"),sellerIdField,
+                new HBox(10, loginButton, registerButton)
+        );
+        root.getChildren().addAll(sellerLoginForm, backButton);
         root.setBackground(bg);
-
         return scene;
     }
 
@@ -249,10 +288,20 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         Scene scene = new Scene(root, 960, 600, Color.AZURE);
         Button backButton = new Button("Back to Main Menu");
         backButton.setOnAction(event -> stage.setScene(previousScene));
+        Button viewProductsButton = new Button("View All Products");
+        Button buyProductButton = new Button("Buy Product");
 
-        root.getChildren().add(backButton);
-        root.setBackground(bg);
+        backButton.setOnAction(event -> stage.setScene(previousScene));
 
+        viewProductsButton.setOnAction(e -> {
+            openViewProductsMenuScene(scene);
+        });
+
+        buyProductButton.setOnAction(e -> {
+            openBuyProductScene(scene);
+        });
+
+        root.getChildren().addAll(viewProductsButton, buyProductButton, backButton);
         return scene;
     }
 
@@ -278,6 +327,126 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
 
         return scene;
     }
+    private Scene createAddProductMenuScene(Scene previousScene) {
+        VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(root, 960, 600, Color.AZURE);
+        Button backButton = new Button("Back to Seller Menu");
+        Button addButton = new Button("Add Product");
+
+        backButton.setOnAction(event -> stage.setScene(previousScene));
+        addButton.setOnAction(e -> {
+          });
+
+        root.getChildren().addAll(addButton, backButton);
+        root.setBackground(bg);
+
+        return scene;
+    }
+
+    private Scene createViewYourProductsMenuScene(Scene previousScene) {
+        VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(root, 960, 600, Color.AZURE);
+        Button backButton = new Button("Back to Seller Menu");
+        backButton.setOnAction(event -> stage.setScene(previousScene));
+
+        root.getChildren().add(backButton);
+        root.setBackground(bg);
+
+        return scene;
+    }
+
+    private Scene createRemoveProductMenuScene(Scene previousScene) {
+        VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(root, 960, 600, Color.AZURE);
+        Button backButton = new Button("Back to Seller Menu");
+        Button removeButton = new Button("Remove Product");
+
+        backButton.setOnAction(event -> stage.setScene(previousScene));
+        removeButton.setOnAction(e -> {
+        });
+
+        root.getChildren().addAll(removeButton, backButton);
+        root.setBackground(bg);
+
+        return scene;
+    }
+    private Scene createBuyProductScene(Scene previousScene) {
+        VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(root, 960, 600, Color.AZURE);
+        Button backButton = new Button("Back to Customer Menu");
+        backButton.setOnAction(event -> stage.setScene(previousScene));
+        Button buyButton = new Button("Buy Product");
+
+        Label searchQueryLabel = new Label("Enter Product ID or Name you want to buy:");
+        TextField searchQueryField = new TextField();
+        Label quantityLabel = new Label("Enter Quantity:");
+        TextField quantityField = new TextField();
+        Label resultLabel = new Label();
+
+        buyButton.setOnAction(e -> {
+            String searchQuery = searchQueryField.getText();
+            int quantity = Integer.parseInt(quantityField.getText());
+            boolean productFound = false;
+
+            for (Product product : productArrayList) {
+                if (product.getProductId().equalsIgnoreCase(searchQuery) ||
+                        product.getName().equalsIgnoreCase(searchQuery)) {
+                    productFound = true;
+                    if (product.getQuantity() <= 0) {
+                        resultLabel.setText("Out of stock");
+                    } else if (product.getQuantity() < quantity) {
+                        resultLabel.setText("Not enough quantity");
+                    } else {
+                        product.setQuantity(product.getQuantity() - quantity);
+                        resultLabel.setText(quantity + " quantity reduced. " +
+                                (product.getPrice() * quantity) + " deducted from your account. " +
+                                "Remaining Quantity: " + product.getQuantity());
+                    }
+                    break;
+                }
+            }
+
+            if (!productFound) {
+                resultLabel.setText("Product not found!");
+            }
+        });
+
+        root.getChildren().addAll(searchQueryLabel, searchQueryField,
+                quantityLabel, quantityField, buyButton, resultLabel, backButton);
+        root.setBackground(bg);
+
+        return scene;
+    }
+    private Scene createViewProductsMenuScene(Scene previousScene) {
+        VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(root, 960, 600, Color.AZURE);
+        Button backButton = new Button("Back to Customer Menu");
+        backButton.setOnAction(event -> stage.setScene(previousScene));
+
+        for (Product product : productArrayList) {
+            Label productIdLabel = new Label("Product ID: " + product.getProductId());
+            Label productNameLabel = new Label("Product Name: " + product.getName());
+            Label productDescLabel = new Label("Product Description: " + product.getDescription());
+            Label productPriceLabel = new Label("Product Price: " + product.getPrice());
+            Label productCategoryLabel = new Label("Product Category: " + product.getCategory());
+            Label productQuantityLabel = new Label("Product Quantity: " + product.getQuantity());
+            Label newLineLabel = new Label("\n");
+            root.getChildren().addAll(productIdLabel, productNameLabel,
+                    productDescLabel,productPriceLabel,
+                    productCategoryLabel,productQuantityLabel,newLineLabel);
+
+        }
+        root.getChildren().addAll(backButton);
+        root.setBackground(bg);
+        scene.setRoot(root);
+
+        return scene;
+    }
 
     @Override
     public void handle(ActionEvent actionEvent) {
@@ -289,5 +458,16 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    private Seller findSeller(String sellerId) {
+        for (Person person : personArrayList) {
+            if (person instanceof Seller) {
+                Seller seller = (Seller) person;
+                if (seller.getSellerId().equals(sellerId)) {
+                    return seller;
+                }
+            }
+        }
+        return null;
     }
 }
