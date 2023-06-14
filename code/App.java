@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.*;
 import java.io.*;
 
@@ -257,13 +256,13 @@ class Seller extends Person implements Serializable {
 }
 
 class Product implements Serializable {
-    private String productId;
-    private String name;
-    private String description;
-    private double price;
-    private String category;
-    private int quantity;
-    private Seller seller;
+    private String productId = "Null";
+    private String name = "null";
+    private String description ="n/a";
+    private double price = 3;
+    private String category = "124";
+    private int quantity = 0;
+    private Seller seller = new Seller("0","0","0","0","0");
 
     public Product(String productId, String name, String description, double price, String category, int quantity,
                    Seller seller) {
