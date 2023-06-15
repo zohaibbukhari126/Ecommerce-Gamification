@@ -381,14 +381,65 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
 
         return scene;
     }
-    private Scene createAddProductMenuScene(Scene previousScene,Seller seller) {
+    private Scene createAddProductMenuScene(Scene previousScene, Seller seller) {
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
         Scene scene = new Scene(root, 960, 600, Color.AZURE);
         Button backButton = new Button("Back to Seller Menu");
-
+        Label messageLabel = new Label();
         backButton.setOnAction(event -> stage.setScene(previousScene));
-        root.getChildren().addAll(backButton);
+
+        TextField idTextField = new TextField();
+        idTextField.setPromptText("Product ID");
+        TextField nameTextField = new TextField();
+        nameTextField.setPromptText("Product Name");
+        TextField descriptionTextField = new TextField();
+        descriptionTextField.setPromptText("Product Description");
+        TextField priceTextField = new TextField();
+        priceTextField.setPromptText("Price");
+        TextField categoryTextField = new TextField();
+        categoryTextField.setPromptText("Category");
+        TextField quantityTextField = new TextField();
+        quantityTextField.setPromptText("Quantity");
+
+        Button saveButton = new Button("Save Product");
+        saveButton.setOnAction(event -> {
+            String id = idTextField.getText();
+            String name = nameTextField.getText();
+            String description = descriptionTextField.getText();
+            String priceStr = priceTextField.getText();
+            String category = categoryTextField.getText();
+            String quantityStr = quantityTextField.getText();
+
+            if (id.isEmpty() || name.isEmpty() || description.isEmpty() || priceStr.isEmpty()
+                    || category.isEmpty() || quantityStr.isEmpty()) {
+                messageLabel.setText("Please fill in all the required fields.");
+            } else {
+                try {
+                    double price = Double.parseDouble(priceStr);
+                    int quantity = Integer.parseInt(quantityStr);
+                    for (Product product : productArrayList) {
+                        if (product.getProductId().equalsIgnoreCase(id)) {
+                            messageLabel.setText("Product with the same ID already exists!");
+                            return;
+                        }
+                    }
+
+                    Product product = new Product(id, name, description, price, category, quantity, seller);
+                    productArrayList.add(product);
+                    ArrayList<Product> products = seller.getProducts();
+                    products.add(product);
+                    App.saveData(personArrayList, productArrayList);
+
+                    messageLabel.setText("Product saved successfully!");
+                } catch (NumberFormatException e) {
+                    messageLabel.setText("Invalid price or quantity format.");
+                }
+            }
+        });
+
+        root.getChildren().addAll(backButton, idTextField, nameTextField, descriptionTextField,
+                priceTextField, categoryTextField, quantityTextField,messageLabel, saveButton);
         root.setBackground(bg);
 
         return scene;
@@ -397,11 +448,13 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
     private Scene createViewYourProductsMenuScene(Scene previousScene,Seller seller) {
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
-        ScrollPane scrollPane = new ScrollPane(root);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(root);
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
         Scene scene = new Scene(scrollPane, 960, 600, Color.AZURE);
         Button backButton = new Button("Back to Seller Menu");
+        root.getChildren().add(0,backButton);
         backButton.setOnAction(event -> stage.setScene(previousScene));
         for (Product product : seller.getProducts()) {
             Label productIdLabel = new Label("Product ID: " + product.getProductId());
@@ -417,9 +470,8 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
                     productCategoryLabel,productQuantityLabel,productSellerIDLabel,newLineLabel);
 
         }
-        root.getChildren().addAll(backButton);
         root.setBackground(bg);
-        scene.setRoot(root);
+        scene.setRoot(scrollPane);
 
         return scene;
     }
@@ -488,12 +540,17 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
     private Scene createViewProductsMenuScene(Scene previousScene) {
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
-        ScrollPane scrollPane = new ScrollPane(root);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(root);
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
+
         Scene scene = new Scene(scrollPane, 960, 600, Color.AZURE);
         Button backButton = new Button("Back to Customer Menu");
+
         backButton.setOnAction(event -> stage.setScene(previousScene));
+        root.getChildren().add(0,backButton);
+
 
         for (Product product : productArrayList) {
             Label productIdLabel = new Label("Product ID: " + product.getProductId());
@@ -509,10 +566,8 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
                     productCategoryLabel,productQuantityLabel,productSellerIDLabel,newLineLabel);
 
         }
-        root.getChildren().addAll(backButton);
         root.setBackground(bg);
-        scene.setRoot(root);
-
+        scene.setRoot(scrollPane);
         return scene;
     }
 
