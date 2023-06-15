@@ -1,3 +1,4 @@
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,6 +14,8 @@ import java.io.*;
 import java.util.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
+import javafx.util.Duration;
+
 public class AppTest extends Application implements EventHandler<ActionEvent> {
     private static Stage stage;
     public static Label label1 = new Label();
@@ -20,6 +23,7 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
     public static Background bg = new Background(new BackgroundFill(Color.AZURE,null,null));
     private static  ArrayList<Person> personArrayList;
     private static  ArrayList<Product> productArrayList;
+    private static PauseTransition delay = new PauseTransition(Duration.seconds(2));
     public static void main(String[] args) {
 
         personArrayList = App.readObjects(new File("SellerData.txt"));
@@ -234,8 +238,8 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         customerButton.setOnAction(e -> openCustomerMenuScene(scene));
         clearDataButton.setOnAction(e -> openClearDataMenuScene(scene));
         exitButton.setOnAction(e->{
-                App.saveData(personArrayList, productArrayList);
-                stage.close();
+            App.saveData(personArrayList, productArrayList);
+            stage.close();
         });
 
         root.getChildren().addAll(sellerButton, customerButton, clearDataButton, exitButton);
@@ -245,24 +249,24 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
     }
 
     private Scene createSellerMenuScene(Scene previousScene,Seller seller) {
-            VBox root = new VBox(10);
-            root.setAlignment(Pos.CENTER);
-            Scene scene = new Scene(root, 960, 600, Color.AZURE);
-            Button viewYourProductButton = new Button("View Your Products");
-            Button backButton = new Button("Back to Main Menu");
-             Button addProductButton = new Button("Add Product");
+        VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(root, 960, 600, Color.AZURE);
+        Button viewYourProductButton = new Button("View Your Products");
+        Button backButton = new Button("Back to Main Menu");
+        Button addProductButton = new Button("Add Product");
 
-            backButton.setOnAction(e -> stage.setScene(previousScene));
-            viewYourProductButton.setOnAction(e -> openViewYourProductsMenuScene(scene,seller));
-            addProductButton.setOnAction(e -> openAddProductMenuScene(scene,seller));
+        backButton.setOnAction(e -> stage.setScene(previousScene));
+        viewYourProductButton.setOnAction(e -> openViewYourProductsMenuScene(scene,seller));
+        addProductButton.setOnAction(e -> openAddProductMenuScene(scene,seller));
 
-            Button removeProductButton = new Button("Remove Product");
-            removeProductButton.setOnAction(e -> openRemoveProductMenuScene(scene,seller));
+        Button removeProductButton = new Button("Remove Product");
+        removeProductButton.setOnAction(e -> openRemoveProductMenuScene(scene,seller));
 
-            root.getChildren().addAll(viewYourProductButton, addProductButton, removeProductButton, backButton);
+        root.getChildren().addAll(viewYourProductButton, addProductButton, removeProductButton, backButton);
 
-            return scene;
-        }
+        return scene;
+    }
     private Scene createSellerLoginScene(Scene previousScene){
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
@@ -297,7 +301,8 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
 
             if (seller != null) {
                 messageLabel.setText("Login successful!");
-                openSellerMenuScene(scene,seller);
+                delay.play();
+                delay.setOnFinished(event -> openSellerMenuScene(scene,seller));
             } else {
                 messageLabel.setText("Seller ID not found!");
             }
@@ -312,11 +317,16 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
                 String lastName = lastNameTextField.getText();
                 String email = emailTextField.getText();
                 String phoneNumber = phoneNumberTextField.getText();
-
-                Seller seller = new Seller(firstName, lastName, email, phoneNumber, sellerId);
-                personArrayList.add(seller);
-                messageLabel.setText("Registration successful!");
-                openSellerMenuScene(scene,seller);
+                if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phoneNumber.isEmpty()) {
+                    messageLabel.setText("Please fill in all the required fields.");
+                } else {
+                    Seller seller = new Seller(firstName, lastName, email, phoneNumber, sellerId);
+                    personArrayList.add(seller);
+                    App.saveData(personArrayList, productArrayList);
+                    messageLabel.setText("Registration successful!");
+                    delay.play();
+                    delay.setOnFinished(event -> openSellerMenuScene(scene, seller));
+                }
 
             }
         });
