@@ -18,7 +18,6 @@ import javafx.util.Duration;
 
 public class AppTest extends Application implements EventHandler<ActionEvent> {
     private static Stage stage;
-    public static Label label1 = new Label();
     public static boolean loggedIn = false;
     public static Background bg = new Background(new BackgroundFill(Color.AZURE,null,null));
     private static  ArrayList<Person> personArrayList;
@@ -253,7 +252,7 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         root.setAlignment(Pos.CENTER);
         Scene scene = new Scene(root, 960, 600, Color.AZURE);
         Button viewYourProductButton = new Button("View Your Products");
-        Button backButton = new Button("Back to Main Menu");
+        Button backButton = new Button("Logout");
         Button addProductButton = new Button("Add Product");
 
         backButton.setOnAction(e -> stage.setScene(previousScene));
@@ -272,7 +271,7 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         root.setAlignment(Pos.CENTER);
         Scene scene = new Scene(root, 960, 600, Color.AZURE);
 
-        Button backButton = new Button("Back to Login page");
+        Button backButton = new Button("Back to main menu");
         backButton.setOnAction(e -> stage.setScene(previousScene));
 
         Button loginButton = new Button("Login");
@@ -368,10 +367,15 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         Button backButton = new Button("Back to Main Menu");
 
         clearSellerDataButton.setOnAction(e -> {
-            App.clearFile(new File("SellerData.txt"));});
+
+            App.clearFile(new File("SellerData.txt"));
+            personArrayList.clear();
+            });
+
 
         clearProductDataButton.setOnAction(e -> {
             App.clearFile(new File("ProductData.txt"));
+            productArrayList.clear();
         });
 
         backButton.setOnAction(event -> stage.setScene(previousScene));
@@ -445,7 +449,7 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         return scene;
     }
 
-    private Scene createViewYourProductsMenuScene(Scene previousScene,Seller seller) {
+    private Scene createViewYourProductsMenuScene(Scene previousScene, Seller seller) {
         VBox root = new VBox(10);
         root.setAlignment(Pos.CENTER);
         ScrollPane scrollPane = new ScrollPane();
@@ -454,8 +458,9 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         scrollPane.setFitToHeight(true);
         Scene scene = new Scene(scrollPane, 960, 600, Color.AZURE);
         Button backButton = new Button("Back to Seller Menu");
-        root.getChildren().add(0,backButton);
+        root.getChildren().add(0, backButton);
         backButton.setOnAction(event -> stage.setScene(previousScene));
+
         for (Product product : seller.getProducts()) {
             Label productIdLabel = new Label("Product ID: " + product.getProductId());
             Label productNameLabel = new Label("Product Name: " + product.getName());
@@ -466,8 +471,8 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
             Label productSellerIDLabel = new Label("Product Seller ID: " + product.getSeller().getSellerId());
             Label newLineLabel = new Label("\n");
             root.getChildren().addAll(productIdLabel, productNameLabel,
-                    productDescLabel,productPriceLabel,
-                    productCategoryLabel,productQuantityLabel,productSellerIDLabel,newLineLabel);
+                    productDescLabel, productPriceLabel,
+                    productCategoryLabel, productQuantityLabel, productSellerIDLabel, newLineLabel);
 
         }
         root.setBackground(bg);
@@ -481,10 +486,36 @@ public class AppTest extends Application implements EventHandler<ActionEvent> {
         root.setAlignment(Pos.CENTER);
         Scene scene = new Scene(root, 960, 600, Color.AZURE);
         Button backButton = new Button("Back to Seller Menu");
+        Label messageLabel = new Label();
+        TextField idTextField = new TextField();
+        idTextField.setPromptText("Product ID");
+        Button removeButton = new Button("Remove Product");
+        removeButton.setOnAction(event -> {
+            String id = idTextField.getText();
+            if (id.isEmpty()) {
+                messageLabel.setText("Please fill in all the required fields.");
+            } else {
+                for (Product product : seller.getProducts()) {
+                    if (product.getProductId().equalsIgnoreCase(id)) {
+                        if (product.getSeller().getSellerId().equalsIgnoreCase(seller.getSellerId())) {
+                            productArrayList.remove(product);
+                            seller.getProducts().remove(product);
+                            App.saveData(personArrayList, productArrayList);
+                            messageLabel.setText("Product removed successfully!");
+                            return;
+                        } else {
+                            messageLabel.setText("You are not the seller of this product!");
+                            return;
+                        }
+                    }
+                }
+                messageLabel.setText("Product with the given ID does not exist!");
+            }
+        });
 
         backButton.setOnAction(event -> stage.setScene(previousScene));
 
-        root.getChildren().addAll(backButton);
+        root.getChildren().addAll(idTextField,removeButton, messageLabel,backButton);
         root.setBackground(bg);
 
         return scene;
